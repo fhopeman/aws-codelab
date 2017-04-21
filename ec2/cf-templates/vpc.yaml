@@ -1,0 +1,122 @@
+---
+# bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml --params ec2/properties/vpc.yaml --stack vpc-TEAM_NAME
+# bundle exec autostacker24 delete --stack vpc-TEAM_NAME
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  TeamName:
+    Type: String
+  DnsRootDomain:
+    Type: String
+  VpcCidr:
+    Type: String
+  VpcSubnetAz1aCidr:
+    Type: String
+  VpcSubnetAz1bCidr:
+    Type: String
+
+Resources:
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCidr
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'false'
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Sub "${TeamName}"
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  # dns zone of VPC -> delegation has to be configured in the root dns zone
+  Route53HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Sub "${TeamName}${DnsRootDomain}"
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-RouteTablePublic"
+
+  RoutePublic:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  # SUBNET EU-CENTRAL-1A PUBLIC
+  SubnetAz1aPublic:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: true
+      CidrBlock: !Ref SubnetAz1aCidr
+      AvailabilityZone: "eu-central-1a"
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-public [eu-central-1a]"
+  RouteTableAssociationAz1aPublic:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetAz1aPublic
+      RouteTableId: !Ref RouteTable
+
+  # SUBNET EU-CENTRAL-1B PUBLIC
+  SubnetAz1bPublic:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: true
+      CidrBlock: !Ref SubnetAz1bCidr
+      AvailabilityZone: "eu-central-1b"
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-public [eu-central-1b]"
+  RouteTableAssociationAz1bPublic:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetAz1bPublic
+      RouteTableId: !Ref RouteTable
+
+Outputs:
+
+  VPCId:
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCId"
+    Value: !Ref VPC
+  VPCCidr:
+      Export:
+        Name: !Sub "${AWS::StackName}-VPCCidr"
+      Value: !Ref VpcCidr
+
+  HostedZoneId:
+    Export:
+      Name: !Sub "${AWS::StackName}-HostedZoneId"
+    Value: !Ref Route53HostedZone
+  HostedZoneName:
+    Export:
+      Name: !Sub "${AWS::StackName}-HostedZoneName"
+    Value: !Sub "${Environment}.${TeamName}${DnsRootDomain}"
+
+  SubnetAz1aPublicId:
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetAz1aPublicId"
+    Value: !Ref SubnetAz1aPublic
+  SubnetAz1bPublicId:
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetAz1bPublicId"
+    Value: !Ref SubnetAz1bPublic
