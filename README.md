@@ -11,7 +11,7 @@ Provides aws codelab challenges ..
 Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
 
 ## 2. EC2 Codelab
-1. Create DynamoDB to show the general concept of AWS services.
+1. Create DynamoDB to show the general concept of AWS services
 2. Theory EC2
 3. Create VPC
 4. Deploy yocto
