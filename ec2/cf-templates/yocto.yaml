@@ -175,3 +175,28 @@ Resources:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
           PropagateAtLaunch: "true"
+
+  ScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: "120"
+      ScalingAdjustment: "1"
+
+  CPUUtilizationHighAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too high"
+      EvaluationPeriods: "1"
+      Statistic: "Average"
+      Threshold: "75"
+      Period: "60"
+      AlarmActions:
+      - Ref: ScaleUpPolicy
+      Namespace: "AWS/EC2"
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref AutoScalingGroup
+      ComparisonOperator: "GreaterThanThreshold"
+      MetricName: "CPUUtilization"
