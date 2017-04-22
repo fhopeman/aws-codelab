@@ -24,5 +24,7 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
   - DNS
     - [Hint](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
 5. Autoscaling with jmeter
+  - [Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-policy.html)
+  - [Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html)
 
 ## 3. Lambda Codelab
