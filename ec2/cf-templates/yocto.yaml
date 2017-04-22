@@ -101,51 +101,51 @@ Resources:
 
   ###### ELB ######
 
-#  SecurityGroupELB:
-#    Type: AWS::EC2::SecurityGroup
-#    Properties:
-#      GroupDescription: "Allow access via http"
-#      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
-#      SecurityGroupIngress:
-#        - IpProtocol: tcp
-#          FromPort: "80"
-#          ToPort: "80"
-#          CidrIp: "0.0.0.0/0"
-#      Tags:
-#        - Key: Name
-#          Value: !Sub "${TeamName}-Yocto-ELB"
-#
-#  YoctoElasticLoadBalancer:
-#    Type: AWS::ElasticLoadBalancing::LoadBalancer
-#    Properties:
-#      LoadBalancerName: !Sub "${TeamName}-Yocto-ELB"
-#      Subnets:
-#        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
-#        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
-#      SecurityGroups:
-#        - !Ref SecurityGroupELB
-#      CrossZone: "true"
-#      Listeners:
-#      - LoadBalancerPort: "80"
-#        InstancePort: "8080"
-#        Protocol: HTTP
-#      HealthCheck:
-#        Target: HTTP:8080/status
-#        HealthyThreshold: "2"
-#        UnhealthyThreshold: "10"
-#        Interval: "30"
-#        Timeout: "5"
-#
-#  DNSRecord:
-#    Type: AWS::Route53::RecordSet
-#    Properties:
-#      Comment: "DNS name"
-#      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneId"}
-#      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneName"} ] ]
-#      Type: "CNAME"
-#      TTL: "300"
-#      ResourceRecords:
-#        - !GetAtt YoctoElasticLoadBalancer.DNSName
+  SecurityGroupELB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access via http"
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "80"
+          ToPort: "80"
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${TeamName}-Yocto-ELB"
+
+  YoctoElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      LoadBalancerName: !Sub "${TeamName}-Yocto-ELB"
+      Subnets:
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+      SecurityGroups:
+        - !Ref SecurityGroupELB
+      CrossZone: "true"
+      Listeners:
+      - LoadBalancerPort: "80"
+        InstancePort: "8080"
+        Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:8080/status
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "10"
+        Interval: "30"
+        Timeout: "5"
+
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Comment: "DNS name"
+      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneId"}
+      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneName"} ] ]
+      Type: "A"
+      AliasTarget:
+        HostedZoneId: !GetAtt YoctoElasticLoadBalancer.CanonicalHostedZoneNameID
+        DNSName: !GetAtt YoctoElasticLoadBalancer.DNSName
 
   ###### auto scaling group ######
 
@@ -160,11 +160,11 @@ Resources:
         MaxBatchSize: "1"
         PauseTime: PT5M
         WaitOnResourceSignals: "true"
-    #DependsOn:
-    #  - YoctoElasticLoadBalancer
+    DependsOn:
+      - YoctoElasticLoadBalancer
     Properties:
-      #LoadBalancerNames:
-      #  - !Sub "${TeamName}-Yocto-ELB"
+      LoadBalancerNames:
+        - !Sub "${TeamName}-Yocto-ELB"
       VPCZoneIdentifier:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}

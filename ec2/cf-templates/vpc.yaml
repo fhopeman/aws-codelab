@@ -64,7 +64,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
-      CidrBlock: !Ref SubnetAz1aCidr
+      CidrBlock: !Ref VpcSubnetAz1aCidr
       AvailabilityZone: "eu-central-1a"
       Tags:
       - Key: Name
@@ -81,7 +81,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
-      CidrBlock: !Ref SubnetAz1bCidr
+      CidrBlock: !Ref VpcSubnetAz1bCidr
       AvailabilityZone: "eu-central-1b"
       Tags:
       - Key: Name
@@ -110,7 +110,7 @@ Outputs:
   HostedZoneName:
     Export:
       Name: !Sub "${AWS::StackName}-HostedZoneName"
-    Value: !Sub "${Environment}.${TeamName}${DnsRootDomain}"
+    Value: !Sub "${TeamName}${DnsRootDomain}"
 
   SubnetAz1aPublicId:
     Export:

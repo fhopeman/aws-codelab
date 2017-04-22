@@ -18,8 +18,11 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
   - auto scaling group
   - SSH access
   - ELB deployment
+    - [Hint 1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html)
+    - [Hint 2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html)
   - Theory DNS
   - DNS
+    - [Hint](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
 5. Autoscaling with jmeter
 
 ## 3. Lambda Codelab
