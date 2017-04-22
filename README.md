@@ -14,14 +14,14 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
 1. Create DynamoDB to show the general concept of AWS services
 2. Theory EC2
 3. Create VPC
-4. Deploy yocto
+4. Deploy [yocto](https://github.com/felixb/yocto-httpd)
    * auto scaling group
    * SSH access
    * ELB deployment
      * [Hint 1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html)
      * [Hint 2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html)
    * Theory DNS
-   * DNS
+   * Create your own DNS entry
      * [Hint](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
 5. Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
    * Short introduction to EC2 instance types
