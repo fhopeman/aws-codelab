@@ -156,9 +156,9 @@ Resources:
         Timeout: PT5M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MinInstancesInService: "0"
+        MinInstancesInService: "1"
         MaxBatchSize: "1"
-        PauseTime: PT5M
+        PauseTime: PT1M
         WaitOnResourceSignals: "true"
     DependsOn:
       - YoctoElasticLoadBalancer
@@ -170,7 +170,7 @@ Resources:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       MinSize: "1"
-      MaxSize: "1"
+      MaxSize: "5"
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
@@ -184,7 +184,15 @@ Resources:
       Cooldown: "120"
       ScalingAdjustment: "1"
 
-  CPUUtilizationHighAlarm:
+  ScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: "120"
+      ScalingAdjustment: "-1"
+
+  AlarmCPUUtilizationHigh:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too high"
@@ -199,4 +207,21 @@ Resources:
       - Name: AutoScalingGroupName
         Value: !Ref AutoScalingGroup
       ComparisonOperator: "GreaterThanThreshold"
+      MetricName: "CPUUtilization"
+
+  AlarmCPUUtilizationLow:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too low"
+      EvaluationPeriods: "1"
+      Statistic: "Average"
+      Threshold: "50"
+      Period: "60"
+      AlarmActions:
+      - Ref: ScaleDownPolicy
+      Namespace: "AWS/EC2"
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref AutoScalingGroup
+      ComparisonOperator: "LessThanThreshold"
       MetricName: "CPUUtilization"
