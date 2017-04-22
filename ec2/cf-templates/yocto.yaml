@@ -170,6 +170,7 @@ Resources:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       MinSize: "1"
+      DesiredCapacity: "1"
       MaxSize: "5"
       Tags:
         - Key: Name
@@ -181,7 +182,7 @@ Resources:
     Properties:
       AdjustmentType: "ChangeInCapacity"
       AutoScalingGroupName: !Ref AutoScalingGroup
-      Cooldown: "120"
+      Cooldown: "180"
       ScalingAdjustment: "1"
 
   ScaleDownPolicy:
@@ -189,7 +190,7 @@ Resources:
     Properties:
       AdjustmentType: "ChangeInCapacity"
       AutoScalingGroupName: !Ref AutoScalingGroup
-      Cooldown: "120"
+      Cooldown: "180"
       ScalingAdjustment: "-1"
 
   AlarmCPUUtilizationHigh:
@@ -198,7 +199,7 @@ Resources:
       AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too high"
       EvaluationPeriods: "1"
       Statistic: "Average"
-      Threshold: "75"
+      Threshold: "5"
       Period: "60"
       AlarmActions:
       - Ref: ScaleUpPolicy
@@ -215,7 +216,7 @@ Resources:
       AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too low"
       EvaluationPeriods: "1"
       Statistic: "Average"
-      Threshold: "50"
+      Threshold: "2"
       Period: "60"
       AlarmActions:
       - Ref: ScaleDownPolicy
