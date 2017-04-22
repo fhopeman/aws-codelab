@@ -1,0 +1,177 @@
+---
+# bundle exec autostacker24 update --template ec2/cf-templates/yocto.yaml --params ec2/properties/yocto.yaml --stack vpc-YOUR_NAME-yocto
+# bundle exec autostacker24 delete --stack vpc-YOUR_NAME-yocto
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  VPCStackName:
+    Type: String
+  TeamName:
+    Type: String
+  ImageId:
+    Type: String
+  KeyName:
+    Type: String
+
+Resources:
+
+  ###### EC2 instance ######
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access via http"
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: "8080"
+          ToPort: "8080"
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${TeamName}-Yocto"
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: ECRpull
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+                - ecr:BatchCheckLayerAvailability
+                - ecr:BatchGetImage
+                - ecr:GetDownloadUrlForLayer
+                - ecr:GetAuthorizationToken
+              Resource:
+                - "*"
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref Role
+
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata:
+      Comment: "Installs docker as service"
+      AWS::CloudFormation::Init:
+        configSets:
+            default:
+              - docker
+        docker:
+          packages:
+            yum:
+              docker: []
+          services:
+            sysvinit:
+              docker:
+                enabled: true
+                ensureRunning: true
+    Properties:
+      ImageId: !Ref ImageId
+      InstanceType: "t2.nano"
+      IamInstanceProfile: !Ref InstanceProfile
+      KeyName: !Ref KeyName
+      UserData:
+        "Fn::Base64": !Sub
+          |
+            #!/bin/bash -xe
+
+            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchConfiguration --region ${AWS::Region}
+            docker run -dp 8080:8080 felixb/yocto-httpd
+
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource AutoScalingGroup --region ${AWS::Region}
+      SecurityGroups:
+        - !Ref SecurityGroup
+
+  ###### ELB ######
+
+#  SecurityGroupELB:
+#    Type: AWS::EC2::SecurityGroup
+#    Properties:
+#      GroupDescription: "Allow access via http"
+#      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+#      SecurityGroupIngress:
+#        - IpProtocol: tcp
+#          FromPort: "80"
+#          ToPort: "80"
+#          CidrIp: "0.0.0.0/0"
+#      Tags:
+#        - Key: Name
+#          Value: !Sub "${TeamName}-Yocto-ELB"
+#
+#  YoctoElasticLoadBalancer:
+#    Type: AWS::ElasticLoadBalancing::LoadBalancer
+#    Properties:
+#      LoadBalancerName: !Sub "${TeamName}-Yocto-ELB"
+#      Subnets:
+#        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
+#        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+#      SecurityGroups:
+#        - !Ref SecurityGroupELB
+#      CrossZone: "true"
+#      Listeners:
+#      - LoadBalancerPort: "80"
+#        InstancePort: "8080"
+#        Protocol: HTTP
+#      HealthCheck:
+#        Target: HTTP:8080/status
+#        HealthyThreshold: "2"
+#        UnhealthyThreshold: "10"
+#        Interval: "30"
+#        Timeout: "5"
+#
+#  DNSRecord:
+#    Type: AWS::Route53::RecordSet
+#    Properties:
+#      Comment: "DNS name"
+#      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneId"}
+#      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneName"} ] ]
+#      Type: "CNAME"
+#      TTL: "300"
+#      ResourceRecords:
+#        - !GetAtt YoctoElasticLoadBalancer.DNSName
+
+  ###### auto scaling group ######
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT5M
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MinInstancesInService: "0"
+        MaxBatchSize: "1"
+        PauseTime: PT5M
+        WaitOnResourceSignals: "true"
+    #DependsOn:
+    #  - YoctoElasticLoadBalancer
+    Properties:
+      #LoadBalancerNames:
+      #  - !Sub "${TeamName}-Yocto-ELB"
+      VPCZoneIdentifier:
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      MinSize: "1"
+      MaxSize: "1"
+      Tags:
+        - Key: Name
+          Value: !Sub "${TeamName}-Yocto"
+          PropagateAtLaunch: "true"
