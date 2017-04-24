@@ -3,6 +3,10 @@
 # bundle exec autostacker24 delete --stack lambda-chatbot-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  TeamName:
+    Type: String
+
 Resources:
 
   LambdaRole:
@@ -22,6 +26,7 @@ Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: !Sub "chatbot-${TeamName}"
       Code:
         ZipFile: >
           exports.handler = function(event, context) {
@@ -33,3 +38,13 @@ Resources:
         Fn::GetAtt: [ LambdaRole , "Arn" ]
       Runtime: "nodejs6.10"
       Timeout: "5"
+
+  CronEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub "trigger-chatbot-${TeamName}"
+      ScheduleExpression: cron(0/10 * * * ? *)
+      Targets:
+        - Arn:
+            Fn::GetAtt: [ LambdaFunction , "Arn" ]
+          Id: !Ref LambdaFunction
