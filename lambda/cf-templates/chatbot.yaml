@@ -27,17 +27,18 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Sub "chatbot-${TeamName}"
-      Code:
-        ZipFile: >
-          exports.handler = function(event, context) {
-            console.log("running code");
-            context.succeed("done");
-          };
-      Handler: "index.handler"
+      MemorySize: "128"
+      Timeout: "5"
       Role:
         Fn::GetAtt: [ LambdaRole , "Arn" ]
       Runtime: "nodejs6.10"
-      Timeout: "5"
+      Handler: "index.sendMessage"
+      Code:
+        ZipFile: >
+          exports.sendMessage = function(event, context) {
+            console.log("running code");
+            context.succeed("done");
+          };
 
   CronEvent:
     Type: AWS::Events::Rule
@@ -48,3 +49,13 @@ Resources:
         - Arn:
             Fn::GetAtt: [ LambdaFunction , "Arn" ]
           Id: !Ref LambdaFunction
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Principal: events.amazonaws.com
+      FunctionName:
+        Fn::GetAtt: [ LambdaFunction ,"Arn" ]
+      Action: "lambda:InvokeFunction"
+      SourceArn:
+        Fn::GetAtt: [ CronEvent , "Arn" ]
