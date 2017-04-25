@@ -16,12 +16,12 @@ Resources:
       AttributeDefinitions:
       - AttributeName: "timestamp"
         AttributeType: "N"
-      - AttributeName: "user"
+      - AttributeName: "username"
         AttributeType: "S"
       KeySchema:
       - AttributeName: "timestamp"
         KeyType: "HASH"
-      - AttributeName: "user"
+      - AttributeName: "username"
         KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
@@ -47,8 +47,7 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "dynamodb:BatchGetItem"
                   - "dynamodb:GetItem"
@@ -61,13 +60,10 @@ Resources:
     Properties:
       Code:
         "ZipFile": !Sub >
-          console.log('Loading event');
           var AWS = require('aws-sdk');
           var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
           exports.handler = (event, context, callback) => {
-            console.log('Event:', JSON.stringify(event));
-
             console.log("try to load chat");
             var params = {
                 TableName: "${TeamName}-chat",
@@ -87,6 +83,69 @@ Resources:
       Handler: "index.handler"
       Role:
         Fn::GetAtt: [LambdaReadChatRole, "Arn"]
+      Runtime: "nodejs4.3"
+
+  LambdaWriteChatRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+        - PolicyName: "ApiGatewayLogsPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "dynamodb:PutItem"
+                Resource: "*"
+
+  LambdaWriteChat:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        "ZipFile": !Sub >
+          var AWS = require('aws-sdk');
+          var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+
+          exports.handler = (event, context, callback) => {
+            console.log('Event:', JSON.stringify(event));
+            console.log("try to save message");
+
+            var timestamp = new Date().getTime().toString();
+            dynamodb.putItem({
+                "TableName": "${TeamName}-chat",
+                "Item" : {
+                    "timestamp": {"N": timestamp },
+                    "username": {"S": event.username },
+                    "message": {"S": event.message}
+                }
+            }, function(err, data) {
+                if (err) {
+                    console.log(JSON.stringify(err));
+                    context.done('error', 'putting item failed: ' + err);
+                }
+                else {
+                    console.log('success: ' + JSON.stringify(data));
+                    context.done('success');
+                }
+            });
+          };
+      Description: "A chat write function"
+      FunctionName: "LambdaWriteChat"
+      Handler: "index.handler"
+      Role:
+        Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
       Runtime: "nodejs4.3"
 
   LambdaReadChatPermissionForApiGateway:
@@ -130,7 +189,8 @@ Resources:
           "application/json":
             Fn::Join: ["", [ "{", "  \"name\": \"$input.params('name')\"", "}" ]]
       RequestParameters:
-        "method.request.querystring.name": "false"
+        "method.request.querystring.username": "true"
+        "method.request.querystring.message": "true"
       ResourceId: !Ref ApiResourceReadChat
       RestApiId: !Ref ChatApi
       MethodResponses:
