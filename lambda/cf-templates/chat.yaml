@@ -85,6 +85,16 @@ Resources:
         Fn::GetAtt: [LambdaReadChatRole, "Arn"]
       Runtime: "nodejs4.3"
 
+  LambdaReadChatPermissionForApiGateway:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:invokeFunction"
+      FunctionName:
+        Fn::GetAtt: [LambdaReadChat, "Arn"]
+      Principal: "apigateway.amazonaws.com"
+      SourceArn:
+        Fn::Join: ["", ["arn:aws:execute-api:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":", {"Ref": "ChatApi"}, "/*"]]
+
   LambdaWriteChatRole:
     Type: AWS::IAM::Role
     Properties:
@@ -133,11 +143,10 @@ Resources:
             }, function(err, data) {
                 if (err) {
                     console.log(JSON.stringify(err));
-                    context.done('error', 'putting item failed: ' + err);
+                    callback('putting item failed: ' + err);
                 }
                 else {
                     console.log('success: ' + JSON.stringify(data));
-                    context.done('success');
                 }
             });
           };
@@ -148,12 +157,12 @@ Resources:
         Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
       Runtime: "nodejs4.3"
 
-  LambdaReadChatPermissionForApiGateway:
+  LambdaWriteChatPermissionForApiGateway:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:invokeFunction"
       FunctionName:
-        Fn::GetAtt: [LambdaReadChat, "Arn"]
+        Fn::GetAtt: [LambdaWriteChat, "Arn"]
       Principal: "apigateway.amazonaws.com"
       SourceArn:
         Fn::Join: ["", ["arn:aws:execute-api:", {"Ref": "AWS::Region"}, ":", {"Ref": "AWS::AccountId"}, ":", {"Ref": "ChatApi"}, "/*"]]
@@ -165,7 +174,7 @@ Resources:
       Description: "API used for chatting"
       FailOnWarnings : "true"
 
-  ApiResourceReadChat:
+  ApiResourceChat:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref ChatApi
@@ -188,10 +197,26 @@ Resources:
         RequestTemplates:
           "application/json":
             Fn::Join: ["", [ "{", "  \"name\": \"$input.params('name')\"", "}" ]]
-      RequestParameters:
-        "method.request.querystring.username": "true"
-        "method.request.querystring.message": "true"
-      ResourceId: !Ref ApiResourceReadChat
+      ResourceId: !Ref ApiResourceChat
+      RestApiId: !Ref ChatApi
+      MethodResponses:
+        - StatusCode: 200
+
+  WriteChatRequest:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: "NONE"
+      HttpMethod: "POST"
+      Integration:
+        Type: "AWS"
+        IntegrationHttpMethod: "POST"
+        Uri:
+          Fn::Join: ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["LambdaWriteChat", "Arn"]}, "/invocations"]]
+        IntegrationResponses:
+          - StatusCode: 200
+        RequestTemplates:
+          "application/json": $input.body
+      ResourceId: !Ref ApiResourceChat
       RestApiId: !Ref ChatApi
       MethodResponses:
         - StatusCode: 200
