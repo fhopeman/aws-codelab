@@ -30,3 +30,6 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
      * [Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-policy.html)
 
 ## 3. Lambda Codelab
+1. Create DynamoDB to show the general concept of AWS services
+2. Theory Lambda
+

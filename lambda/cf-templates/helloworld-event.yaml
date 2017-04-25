@@ -1,5 +1,5 @@
 ---
-# bundle exec autostacker24 update --template lambda/cf-templates/chatbot.yaml --stack lambda-chatbot-TEAM_NAME
+# bundle exec autostacker24 update --template lambda/cf-templates/helloworld-event.yaml --stack lambda-chatbot-TEAM_NAME
 # bundle exec autostacker24 delete --stack lambda-chatbot-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 
