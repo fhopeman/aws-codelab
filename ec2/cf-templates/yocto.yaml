@@ -1,6 +1,6 @@
 ---
-# bundle exec autostacker24 update --template ec2/cf-templates/yocto.yaml --params ec2/properties/yocto.yaml --stack vpc-YOUR_NAME-yocto
-# bundle exec autostacker24 delete --stack vpc-YOUR_NAME-yocto
+# bundle exec autostacker24 update --template ec2/cf-templates/yocto.yaml --params ec2/properties/yocto.yaml --stack vpc-TEAM_NAME-yocto
+# bundle exec autostacker24 delete --stack vpc-TEAM_NAME-yocto
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
@@ -132,9 +132,9 @@ Resources:
       HealthCheck:
         Target: HTTP:8080/status
         HealthyThreshold: "2"
-        UnhealthyThreshold: "10"
-        Interval: "30"
-        Timeout: "5"
+        UnhealthyThreshold: "2"
+        Interval: "5"
+        Timeout: "2"
 
   DNSRecord:
     Type: AWS::Route53::RecordSet
@@ -169,6 +169,8 @@ Resources:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 120
       MinSize: "1"
       DesiredCapacity: "1"
       MaxSize: "5"
