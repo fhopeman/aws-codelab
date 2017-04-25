@@ -21,6 +21,9 @@ RUN gem install -v ${AUTOSTACKER_VERSION} autostacker24
 RUN curl -L -o /usr/local/bin/cli53 https://github.com/barnybug/cli53/releases/download/${CLI53_VERSION}/cli53-linux-amd64 \
  && chmod +x /usr/local/bin/cli53
 
+RUN curl -L -o /usr/local/bin/sniper http://lubia-me.qiniudn.com/sniper_linux_amd64 \
+ && chmod +x /usr/local/bin/sniper
+
 RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | bash - \
  && apt-get install nodejs \
  && rm -rf /var/lib/apt/* /var/cache/apt/*
