@@ -19,10 +19,11 @@ IGOR_DOCKER_TTY=1          # open an interactive tty (0/1)
 IGOR_DOCKER_USER=$(id -u)  # run commands inside the container with this user
 IGOR_DOCKER_GROUP=$(id -g) # run commands inside the container with this group
 IGOR_DOCKER_ARGS=''        # default arguments to docker run
+IGOR_PORTS=''              # space separated list of ports to expose
 IGOR_MOUNT_PASSWD=0        # mount /etc/passwd inside the container (0/1)
 IGOR_MOUNT_GROUP=0         # mount /etc/group inside the container (0/1)
-IGOR_MOUNTS_RO=''          # space seperated list of volumes to mount read only
-IGOR_MOUNTS_RW=''          # space seperated list of volumes to mount read write
+IGOR_MOUNTS_RO=''          # space separated list of volumes to mount read only
+IGOR_MOUNTS_RW=''          # space separated list of volumes to mount read write
 IGOR_WORKDIR=${PWD}        # use this workdir inside the container
 IGOR_WORKDIR_MODE=rw       # mount the workdir with this mode (ro/rw)
 IGOR_ENV=''                # space separated list of environment variables set inside the container
@@ -87,6 +88,9 @@ fi
 if [ ${IGOR_DOCKER_TTY} -gt 0 ]; then
     args="${args} -ti"
 fi
+for p in ${IGOR_PORTS}; do
+    args="${args} -p ${p}:${p}"
+done
 if [ ${IGOR_MOUNT_PASSWD} -gt 0 ]; then
     args="${args} -v /etc/passwd:/etc/passwd:ro"
 fi
