@@ -34,7 +34,7 @@ bundle exec autostacker24 update --template lambda/cf-templates/chat-api.yaml \
     --param TeamName="${TEAM_NAME}" \
     --profile "${PROFILE}"
 
-# 2. Run integration tests if API_GATEWAY_ID present
+# 5. Run integration tests if API_GATEWAY_ID present
 if [ -n "${API_GATEWAY_ID}" ]; then
     echo -e "\nStarting integration tests .."
     ./lambda/ci/integration-test.sh
