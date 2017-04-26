@@ -1,0 +1,27 @@
+---
+# bundle exec autostacker24 delete --stack lambda-chat-TEAM_NAME
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  TeamName:
+    Type: String
+
+Resources:
+
+  ChatDynamoDb:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${TeamName}-chat"
+      AttributeDefinitions:
+      - AttributeName: "timestamp"
+        AttributeType: "N"
+      - AttributeName: "username"
+        AttributeType: "S"
+      KeySchema:
+      - AttributeName: "timestamp"
+        KeyType: "HASH"
+      - AttributeName: "username"
+        KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 1
