@@ -38,6 +38,14 @@ Resources:
   LambdaReadChat:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: "LambdaReadChat"
+      Description: "A read chat function"
+      Handler: "index.handler"
+      Role:
+        Fn::GetAtt: [LambdaReadChatRole, "Arn"]
+      Runtime: "nodejs6.10"
+      MemorySize: "128"
+      Timeout: "3"
       Code:
         "ZipFile": !Sub >
           var AWS = require('aws-sdk');
@@ -58,12 +66,6 @@ Resources:
                 });
             });
           };
-      Description: "A read chat function"
-      FunctionName: "LambdaReadChat"
-      Handler: "index.handler"
-      Role:
-        Fn::GetAtt: [LambdaReadChatRole, "Arn"]
-      Runtime: "nodejs6.10"
 
 Outputs:
 

@@ -35,6 +35,14 @@ Resources:
   LambdaWriteChat:
     Type: AWS::Lambda::Function
     Properties:
+      Description: "A chat write function"
+      FunctionName: "LambdaWriteChat"
+      Handler: "index.handler"
+      Role:
+        Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
+      Runtime: "nodejs6.10"
+      MemorySize: "128"
+      Timeout: "3"
       Code:
         "ZipFile": !Sub >
           var AWS = require('aws-sdk');
@@ -62,12 +70,6 @@ Resources:
                 }
             });
           };
-      Description: "A chat write function"
-      FunctionName: "LambdaWriteChat"
-      Handler: "index.handler"
-      Role:
-        Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
-      Runtime: "nodejs6.10"
 
 Outputs:
 
