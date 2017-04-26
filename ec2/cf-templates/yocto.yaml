@@ -169,8 +169,8 @@ Resources:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
-      HealthCheckType: ELB
-      HealthCheckGracePeriod: 120
+      HealthCheckType: "ELB"
+      HealthCheckGracePeriod: "120"
       MinSize: "1"
       DesiredCapacity: "1"
       MaxSize: "5"
