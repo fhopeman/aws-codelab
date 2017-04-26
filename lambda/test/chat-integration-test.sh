@@ -5,7 +5,7 @@ if [ -z "${API_GATEWAY_ID}" ]; then
     exit 1
 fi
 
-echo -e "Sending message .."
+echo -e "\nSending message .."
 curl -XPOST \
     -d '{"username":"testuser","message": "test message"}' \
     "https://${API_GATEWAY_ID}.execute-api.eu-central-1.amazonaws.com/LATEST/chat"

@@ -194,9 +194,6 @@ Resources:
           Fn::Join: ["", ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["LambdaReadChat", "Arn"]}, "/invocations"]]
         IntegrationResponses:
           - StatusCode: 200
-        RequestTemplates:
-          "application/json":
-            Fn::Join: ["", [ "{", "  \"name\": \"$input.params('name')\"", "}" ]]
       ResourceId: !Ref ApiResourceChat
       RestApiId: !Ref ChatApi
       MethodResponses:
