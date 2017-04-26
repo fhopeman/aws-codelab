@@ -95,10 +95,6 @@ Outputs:
         Name: !Sub "${AWS::StackName}-VPCCidr"
       Value: !Ref VpcCidr
 
-  HostedZoneId:
-    Export:
-      Name: !Sub "${AWS::StackName}-HostedZoneId"
-    Value: !Ref Route53HostedZone
   HostedZoneName:
     Export:
       Name: !Sub "${AWS::StackName}-HostedZoneName"
