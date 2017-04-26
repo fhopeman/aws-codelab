@@ -10,7 +10,7 @@ Resources:
   ChatApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: "Chat API"
+      Name: !Sub "chat-api-${TeamName}"
       Description: "API used for chatting"
       FailOnWarnings : "true"
 
