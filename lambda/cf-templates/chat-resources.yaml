@@ -1,5 +1,4 @@
 ---
-# bundle exec autostacker24 delete --stack lambda-chat-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
