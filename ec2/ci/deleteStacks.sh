@@ -10,6 +10,6 @@ if [ -z "${TEAM_NAME}" ]; then
     exit 1
 fi
 
-bundle exec autostacker24 delete --stack "lambda-chat-${TEAM_NAME}-api" --profile "${PROFILE}"
-bundle exec autostacker24 delete --stack "lambda-chat-${TEAM_NAME}-write" --profile "${PROFILE}"
-bundle exec autostacker24 delete --stack "lambda-chat-${TEAM_NAME}-resources" --profile "${PROFILE}"
+bundle exec autostacker24 delete --stack "vpc-${TEAM_NAME}-yocto" --profile "${PROFILE}"
+bundle exec autostacker24 delete --stack "vpc-${TEAM_NAME}-debug-sg" --profile "${PROFILE}"
+bundle exec autostacker24 delete --stack "vpc-${TEAM_NAME}" --profile "${PROFILE}"

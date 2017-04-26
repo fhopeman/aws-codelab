@@ -1,6 +1,4 @@
 ---
-# bundle exec autostacker24 update --template ec2/cf-templates/debug-security-group.yaml --param VPCStackName=vpc-TEAM_NAME --param TeamName=TEAM_NAME --stack vpc-TEAM_NAME-debug-sg
-# bundle exec autostacker24 delete --stack debug-sg-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:

@@ -1,6 +1,4 @@
 ---
-# bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml --params ec2/properties/vpc.yaml --stack vpc-TEAM_NAME
-# bundle exec autostacker24 delete --stack vpc-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:

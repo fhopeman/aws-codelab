@@ -1,6 +1,4 @@
 ---
-# bundle exec autostacker24 update --template ec2/cf-templates/yocto.yaml --params ec2/properties/yocto.yaml --stack vpc-TEAM_NAME-yocto
-# bundle exec autostacker24 delete --stack vpc-TEAM_NAME-yocto
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
