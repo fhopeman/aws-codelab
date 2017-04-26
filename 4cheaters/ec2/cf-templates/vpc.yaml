@@ -35,6 +35,12 @@ Resources:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
+  # dns zone of VPC -> delegation has to be configured in the root dns zone
+  Route53HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Sub "${TeamName}${DnsRootDomain}"
+
   RouteTable:
     Type: AWS::EC2::RouteTable
     Properties:

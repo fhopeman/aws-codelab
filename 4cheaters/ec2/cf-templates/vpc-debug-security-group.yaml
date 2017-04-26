@@ -1,0 +1,24 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  VPCStackName:
+    Type: String
+  TeamName:
+    Type: String
+
+Resources:
+
+  DebugSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow ssh access through instance"
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${TeamName}-ssh-debug"

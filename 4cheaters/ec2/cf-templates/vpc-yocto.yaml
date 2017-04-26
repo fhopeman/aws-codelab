@@ -113,6 +113,38 @@ Resources:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto-ELB"
 
+  YoctoElasticLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      LoadBalancerName: !Sub "${TeamName}-Yocto-ELB"
+      Subnets:
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+      SecurityGroups:
+        - !Ref SecurityGroupELB
+      CrossZone: "true"
+      Listeners:
+      - LoadBalancerPort: "80"
+        InstancePort: "8080"
+        Protocol: HTTP
+      HealthCheck:
+        Target: HTTP:8080/status
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "5"
+        Timeout: "2"
+
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Comment: "DNS name"
+      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneId"}
+      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneName"} ] ]
+      Type: "A"
+      AliasTarget:
+        HostedZoneId: !GetAtt YoctoElasticLoadBalancer.CanonicalHostedZoneNameID
+        DNSName: !GetAtt YoctoElasticLoadBalancer.DNSName
+
   ###### auto scaling group ######
 
   AutoScalingGroup:
@@ -126,7 +158,11 @@ Resources:
         MaxBatchSize: "1"
         PauseTime: PT1M
         WaitOnResourceSignals: "true"
+    DependsOn:
+      - YoctoElasticLoadBalancer
     Properties:
+      LoadBalancerNames:
+        - !Sub "${TeamName}-Yocto-ELB"
       VPCZoneIdentifier:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
@@ -140,3 +176,53 @@ Resources:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
           PropagateAtLaunch: "true"
+
+  ScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: "180"
+      ScalingAdjustment: "1"
+
+  ScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: "180"
+      ScalingAdjustment: "-1"
+
+  AlarmCPUUtilizationHigh:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too high"
+      EvaluationPeriods: "1"
+      Statistic: "Average"
+      Threshold: "5"
+      Period: "60"
+      AlarmActions:
+      - Ref: ScaleUpPolicy
+      Namespace: "AWS/EC2"
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref AutoScalingGroup
+      ComparisonOperator: "GreaterThanThreshold"
+      MetricName: "CPUUtilization"
+
+  AlarmCPUUtilizationLow:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too low"
+      EvaluationPeriods: "1"
+      Statistic: "Average"
+      Threshold: "2"
+      Period: "60"
+      AlarmActions:
+      - Ref: ScaleDownPolicy
+      Namespace: "AWS/EC2"
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref AutoScalingGroup
+      ComparisonOperator: "LessThanThreshold"
+      MetricName: "CPUUtilization"
