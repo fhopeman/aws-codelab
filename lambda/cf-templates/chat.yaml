@@ -83,7 +83,7 @@ Resources:
       Handler: "index.handler"
       Role:
         Fn::GetAtt: [LambdaReadChatRole, "Arn"]
-      Runtime: "nodejs4.3"
+      Runtime: "nodejs6.10"
 
   LambdaReadChatPermissionForApiGateway:
     Type: "AWS::Lambda::Permission"
@@ -155,7 +155,7 @@ Resources:
       Handler: "index.handler"
       Role:
         Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
-      Runtime: "nodejs4.3"
+      Runtime: "nodejs6.10"
 
   LambdaWriteChatPermissionForApiGateway:
     Type: "AWS::Lambda::Permission"
