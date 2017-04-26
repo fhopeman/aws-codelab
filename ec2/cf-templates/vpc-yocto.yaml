@@ -135,7 +135,7 @@ Resources:
       HealthCheckGracePeriod: "120"
       MinSize: "1"
       DesiredCapacity: "1"
-      MaxSize: "5"
+      MaxSize: "2"
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"

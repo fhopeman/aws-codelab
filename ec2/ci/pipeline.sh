@@ -24,17 +24,17 @@ bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
 #    --param VPCStackName="vpc-${TEAM_NAME}" \
 #    --param TeamName="${TEAM_NAME}" \
 #    --profile "${PROFILE}"
-#
-## 3. Deploy yocto
+
+# 3. Deploy yocto
 #bundle exec autostacker24 update --template ec2/cf-templates/vpc-yocto.yaml \
 #    --params ec2/properties/yocto.yaml \
 #    --stack "vpc-${TEAM_NAME}-yocto" \
 #    --profile "${PROFILE}"
-#
-## 4. Run integration tests if YOCTO_URL present
-#if [ -n "${YOCTO_URL}" ]; then
-#    echo -e "\nStarting integration tests .."
-#    ./ec2/ci/integration-test.sh
-#else
-#    echo -e "\nSet YOCTO_URL to run integration tests"
-#fi
+
+# 4. Run integration tests if YOCTO_URL present
+if [ -n "${YOCTO_URL}" ]; then
+    echo -e "\nStarting integration tests .."
+    ./ec2/ci/integration-test.sh
+else
+    echo -e "\nSet YOCTO_URL to run integration tests"
+fi

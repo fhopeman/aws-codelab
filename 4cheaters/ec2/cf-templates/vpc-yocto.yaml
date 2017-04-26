@@ -24,7 +24,7 @@ Resources:
         - IpProtocol: "tcp"
           FromPort: "8080"
           ToPort: "8080"
-          CidrIp: "0.0.0.0/0"
+          CidrIp: "172.16.0.0/16"
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
@@ -171,7 +171,7 @@ Resources:
       HealthCheckGracePeriod: "120"
       MinSize: "1"
       DesiredCapacity: "1"
-      MaxSize: "5"
+      MaxSize: "2"
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
@@ -193,36 +193,36 @@ Resources:
       Cooldown: "180"
       ScalingAdjustment: "-1"
 
-  AlarmCPUUtilizationHigh:
+  AlarmRequestCountHigh:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too high"
+      AlarmName: !Sub "${TeamName}-Yocto request count too high"
       EvaluationPeriods: "1"
-      Statistic: "Average"
-      Threshold: "5"
+      Statistic: "Sum"
+      Threshold: "100"
       Period: "60"
       AlarmActions:
       - Ref: ScaleUpPolicy
-      Namespace: "AWS/EC2"
+      Namespace: "AWS/ELB"
       Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref AutoScalingGroup
+      - Name: LoadBalancerName
+        Value: !Sub "${TeamName}-Yocto-ELB"
       ComparisonOperator: "GreaterThanThreshold"
-      MetricName: "CPUUtilization"
+      MetricName: "RequestCount"
 
-  AlarmCPUUtilizationLow:
+  AlarmRequestCountLow:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmName: !Sub "${TeamName}-Yocto CPU utilitation too low"
+      AlarmName: !Sub "${TeamName}-Yocto request count too low"
       EvaluationPeriods: "1"
-      Statistic: "Average"
-      Threshold: "2"
+      Statistic: "Sum"
+      Threshold: "5"
       Period: "60"
       AlarmActions:
       - Ref: ScaleDownPolicy
-      Namespace: "AWS/EC2"
+      Namespace: "AWS/ELB"
       Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref AutoScalingGroup
+      - Name: LoadBalancerName
+        Value: !Sub "${TeamName}-Yocto-ELB"
       ComparisonOperator: "LessThanThreshold"
-      MetricName: "CPUUtilization"
+      MetricName: "RequestCount"
