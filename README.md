@@ -22,8 +22,8 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
      * [Hint 2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html)
    * Theory DNS
    * Create your own DNS entry
-     * [Hint](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html)
-     * [Hint](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
+     * [Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html)
+     * [Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
 5. Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
    * Short introduction to EC2 instance types
    * Autoscaling with CloudWatch alarms
