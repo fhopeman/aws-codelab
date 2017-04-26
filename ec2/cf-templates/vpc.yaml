@@ -98,7 +98,7 @@ Outputs:
   HostedZoneName:
     Export:
       Name: !Sub "${AWS::StackName}-HostedZoneName"
-    Value: !Sub "${TeamName}${DnsRootDomain}"
+    Value: !Sub "${TeamName}.${DnsRootDomain}"
 
   SubnetAz1aPublicId:
     Export:

@@ -10,6 +10,7 @@ if [ -z "${TEAM_NAME}" ]; then
     exit 1
 fi
 
+bundle check || bundle install
 
 # 1. Deploy vpc
 bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
