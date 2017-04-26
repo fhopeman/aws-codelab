@@ -36,7 +36,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: "A chat write function"
-      FunctionName: "LambdaWriteChat"
+      FunctionName: !Sub "chat-write-${TeamName}"
       Handler: "index.handler"
       Role:
         Fn::GetAtt: [LambdaWriteChatRole, "Arn"]

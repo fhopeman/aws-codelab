@@ -38,7 +38,7 @@ Resources:
   LambdaReadChat:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: "LambdaReadChat"
+      FunctionName: !Sub "chat-read-${TeamName}"
       Description: "A read chat function"
       Handler: "index.handler"
       Role:
