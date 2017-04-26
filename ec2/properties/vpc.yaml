@@ -1,6 +1,6 @@
 ---
-TeamName:          "prieser"
-DnsRootDomain:     "cloud.otto.de"
+TeamName:          "TEAM_NAME"
+DnsRootDomain:     "DNS_ROOT_DOMAIN"
 VpcCidr:           "172.16.0.0/16"
 VpcSubnetAz1aCidr: "172.16.0.0/21"
 VpcSubnetAz1bCidr: "172.16.8.0/21"
