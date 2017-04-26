@@ -39,7 +39,7 @@ Resources:
   Route53HostedZone:
     Type: AWS::Route53::HostedZone
     Properties:
-      Name: !Sub "${TeamName}${DnsRootDomain}"
+      Name: !Sub "${TeamName}.${DnsRootDomain}"
 
   RouteTable:
     Type: AWS::EC2::RouteTable
