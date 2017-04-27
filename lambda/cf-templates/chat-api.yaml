@@ -58,7 +58,7 @@ Resources:
 
   ApiDeployment:
     Type: AWS::ApiGateway::Deployment
-    DependsOn: [ WriteChatRequest, ReadChatRequest ]
+    DependsOn: [ ReadChatRequest ]
     Properties:
       RestApiId: !Ref ChatApi
       StageName: "TEST"
