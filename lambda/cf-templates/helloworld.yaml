@@ -1,5 +1,5 @@
 ---
-# bundle exec autostacker24 update --template lambda/cf-templates/helloworld.yaml --stack lambda-helloworld-TEAM_NAME
+# bundle exec autostacker24 update --template lambda/cf-templates/helloworld.yaml --stack lambda-helloworld-TEAM_NAME --param TeamName=TEAM_NAME
 # bundle exec autostacker24 delete --stack lambda-helloworld-TEAM_NAME
 AWSTemplateFormatVersion: '2010-09-09'
 

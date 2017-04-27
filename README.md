@@ -35,3 +35,7 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
 ## 3. Lambda Codelab
 1. Create DynamoDB to show the general concept of AWS services
 2. Theory Lambda
+3. Deploy hello world example
+   * Testing
+   * Make it a real hello world with at least one input parameter
+4. 
