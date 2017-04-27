@@ -38,4 +38,16 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
 3. Deploy hello world example
    * Testing
    * Make it a real hello world with at least one input parameter
-4. 
+4. Chat
+   * Deploy dynamoDb
+   * Implement, deploy and test read chat lambda
+     * [Hint1](http://docs.aws.amazon.com/lambda/latest/dg/programming-model.html)
+     * [Hint2](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html)
+   * Implement, deploy and test write chat lambda
+     * [Hint1](http://docs.aws.amazon.com/lambda/latest/dg/programming-model.html)
+     * [Hint2](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html)
+   * Deploy and test chat API (only read implemented)
+   * Implement, deploy and test write API method
+     * [Hint](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html#input-variable-reference)
+5. Expert challenge: If you change the dynamoDb table name, it should be at one position (`chat-resources.yaml`).
+   Currently you have to change it at three positions.

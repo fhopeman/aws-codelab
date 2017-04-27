@@ -52,8 +52,19 @@ Resources:
           var dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
           exports.handler = (event, context, callback) => {
-            console.log("try to read chat");
+            console.log("try to load chat");
+            var params = {
+                TableName: "${TeamName}-chat",
+                Limit: 10,
+            };
 
+            dynamodb.scan(params, function(err, data) {
+                callback(null, {
+                    input: event,
+                    err: err,
+                    output: data
+                });
+            });
           };
 
 Outputs:

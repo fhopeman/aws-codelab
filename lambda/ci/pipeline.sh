@@ -17,22 +17,22 @@ bundle exec autostacker24 update --template lambda/cf-templates/chat-resources.y
     --profile "${PROFILE}"
 
 # 2. Deploy read lambda
-bundle exec autostacker24 update --template lambda/cf-templates/chat-read.yaml \
-    --stack "lambda-chat-${TEAM_NAME}-read" \
-    --param TeamName="${TEAM_NAME}" \
-    --profile "${PROFILE}"
+#bundle exec autostacker24 update --template lambda/cf-templates/chat-read.yaml \
+#    --stack "lambda-chat-${TEAM_NAME}-read" \
+#    --param TeamName="${TEAM_NAME}" \
+#    --profile "${PROFILE}"
 
 # 3. Deploy write lambda
-bundle exec autostacker24 update --template lambda/cf-templates/chat-write.yaml \
-    --stack "lambda-chat-${TEAM_NAME}-write" \
-    --param TeamName="${TEAM_NAME}" \
-    --profile "${PROFILE}"
+#bundle exec autostacker24 update --template lambda/cf-templates/chat-write.yaml \
+#    --stack "lambda-chat-${TEAM_NAME}-write" \
+#    --param TeamName="${TEAM_NAME}" \
+#    --profile "${PROFILE}"
 
 # 4. Deploy api
-bundle exec autostacker24 update --template lambda/cf-templates/chat-api.yaml \
-    --stack "lambda-chat-${TEAM_NAME}-api" \
-    --param TeamName="${TEAM_NAME}" \
-    --profile "${PROFILE}"
+#bundle exec autostacker24 update --template lambda/cf-templates/chat-api.yaml \
+#    --stack "lambda-chat-${TEAM_NAME}-api" \
+#    --param TeamName="${TEAM_NAME}" \
+#    --profile "${PROFILE}"
 
 # 5. Run integration tests if API_GATEWAY_ID present
 if [ -n "${API_GATEWAY_ID}" ]; then
