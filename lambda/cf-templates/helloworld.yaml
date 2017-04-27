@@ -28,7 +28,7 @@ Resources:
     Properties:
       FunctionName: !Sub "helloworld-${TeamName}"
       MemorySize: "128"
-      Timeout: "5"
+      Timeout: "2"
       Role:
         Fn::GetAtt: [ LambdaRole , "Arn" ]
       Runtime: "nodejs6.10"

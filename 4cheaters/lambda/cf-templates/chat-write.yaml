@@ -42,7 +42,7 @@ Resources:
         Fn::GetAtt: [LambdaWriteChatRole, "Arn"]
       Runtime: "nodejs6.10"
       MemorySize: "128"
-      Timeout: "3"
+      Timeout: "2"
       Code:
         "ZipFile": !Sub >
           var AWS = require('aws-sdk');
