@@ -5,24 +5,27 @@ if [ -z "${API_GATEWAY_ID}" ]; then
     exit 1
 fi
 
-echo -e "\nSending message .."
-curl -XPOST \
-    -d '{"username":"testuser","message": "test message"}' \
-    "https://${API_GATEWAY_ID}.execute-api.eu-central-1.amazonaws.com/LATEST/chat"
-success=$?
-if [ ${success} -eq 0 ]; then
-    echo -e "\nSend message successfully .."
+echo -e "\nReading messages .."
+responseCode=$(curl -sw '%{http_code}' "https://${API_GATEWAY_ID}.execute-api.eu-central-1.amazonaws.com/LATEST/chat" -o /dev/null)
+echo "ResponseCode: ${responseCode}"
+if [ ${responseCode} -eq 200 ]; then
+    echo -e "Read messages successfully .."
 else
-    echo -e "\nSending message failed .."
-    exit 2
+    echo -e "Reading messages failed .."
+    exit 3
 fi
 
-echo -e "\nReading messages .."
-curl -s "https://${API_GATEWAY_ID}.execute-api.eu-central-1.amazonaws.com/LATEST/chat"
-success=$?
-if [ ${success} -eq 0 ]; then
-    echo -e "\nRead messages successfully .."
+echo -e "\nSending message .."
+responseCode=$(curl -XPOST \
+                   -sw '%{http_code}' \
+                   -d '{"username":"testuser","message": "test message"}' \
+                   "https://${API_GATEWAY_ID}.execute-api.eu-central-1.amazonaws.com/LATEST/chat" \
+                   -o /dev/null \
+              )
+echo "ResponseCode: ${responseCode}"
+if [ ${responseCode} -eq 200 ]; then
+    echo -e "\nSend message successfully .."
 else
-    echo -e "\nReading messages failed .."
-    exit 3
+    echo -e "Sending message failed .."
+    exit 2
 fi
