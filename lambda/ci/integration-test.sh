@@ -24,7 +24,7 @@ responseCode=$(curl -XPOST \
               )
 echo "ResponseCode: ${responseCode}"
 if [ ${responseCode} -eq 200 ]; then
-    echo -e "\nSend message successfully .."
+    echo -e "Send message successfully .."
 else
     echo -e "Sending message failed .."
     exit 2
