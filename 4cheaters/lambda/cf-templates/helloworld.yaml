@@ -1,0 +1,61 @@
+---
+# bundle exec autostacker24 update --template lambda/cf-templates/helloworld.yaml --stack lambda-helloworld-TEAM_NAME --param TeamName=TEAM_NAME
+# bundle exec autostacker24 delete --stack lambda-helloworld-TEAM_NAME
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  TeamName:
+    Type: String
+
+Resources:
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "helloworld-${TeamName}"
+      MemorySize: "128"
+      Timeout: "5"
+      Role:
+        Fn::GetAtt: [ LambdaRole , "Arn" ]
+      Runtime: "nodejs6.10"
+      Handler: "index.sendMessage"
+      Code:
+        ZipFile: >
+          exports.sendMessage = function(event, context) {
+            console.log("Hello " + event.name);
+            context.succeed("done");
+          };
+
+  CronEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub "trigger-helloworld-${TeamName}"
+      ScheduleExpression: cron(0/10 * * * ? *)
+      Targets:
+        - Arn:
+            Fn::GetAtt: [ LambdaFunction , "Arn" ]
+          Id: !Ref LambdaFunction
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Principal: events.amazonaws.com
+      FunctionName:
+        Fn::GetAtt: [ LambdaFunction ,"Arn" ]
+      Action: "lambda:InvokeFunction"
+      SourceArn:
+        Fn::GetAtt: [ CronEvent , "Arn" ]
