@@ -12,6 +12,8 @@ Parameters:
     Type: String
   VpcSubnetAz1bCidr:
     Type: String
+  VpcSubnetAz1cCidr:
+    Type: String
 
 Resources:
 
@@ -90,6 +92,23 @@ Resources:
       SubnetId: !Ref SubnetAz1bPublic
       RouteTableId: !Ref RouteTable
 
+  # SUBNET EU-CENTRAL-1C PUBLIC
+  SubnetAz1cPublic:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      MapPublicIpOnLaunch: true
+      CidrBlock: !Ref VpcSubnetAz1cCidr
+      AvailabilityZone: "eu-central-1c"
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-public [eu-central-1c]"
+  RouteTableAssociationAz1cPublic:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref SubnetAz1cPublic
+      RouteTableId: !Ref RouteTable
+
 Outputs:
 
   VPCId:
@@ -118,3 +137,7 @@ Outputs:
     Export:
       Name: !Sub "${AWS::StackName}-SubnetAz1bPublicId"
     Value: !Ref SubnetAz1bPublic
+  SubnetAz1cPublicId:
+    Export:
+      Name: !Sub "${AWS::StackName}-SubnetAz1cPublicId"
+    Value: !Ref SubnetAz1cPublic

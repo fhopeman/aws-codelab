@@ -120,6 +120,7 @@ Resources:
       Subnets:
         - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
         - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1cPublicId"}
       SecurityGroups:
         - !Ref SecurityGroupELB
       CrossZone: "true"
@@ -166,6 +167,7 @@ Resources:
       VPCZoneIdentifier:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
       - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1cPublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       HealthCheckType: "ELB"
       HealthCheckGracePeriod: "120"
