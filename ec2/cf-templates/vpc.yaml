@@ -8,15 +8,16 @@ Parameters:
     Type: String
   VpcCidr:
     Type: String
-  VpcSubnetAz1aCidr:
+  VpcSubnet1Cidr:
     Type: String
-  VpcSubnetAz1bCidr:
+  VpcSubnet2Cidr:
     Type: String
-  VpcSubnetAz1cCidr:
+  VpcSubnet3Cidr:
+    Type: String
+  Region:
     Type: String
 
 Resources:
-
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -52,55 +53,61 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
-  # SUBNET EU-CENTRAL-1A PUBLIC
-  SubnetAz1aPublic:
+  Subnet1Public:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
-      CidrBlock: !Ref VpcSubnetAz1aCidr
-      AvailabilityZone: "eu-central-1a"
+      CidrBlock: !Ref VpcSubnet1Cidr
+      AvailabilityZone:
+        Fn::Select:
+         - 0
+         - Fn::GetAZs: ''
       Tags:
       - Key: Name
-        Value: !Sub "${TeamName}-public [eu-central-1a]"
-  RouteTableAssociationAz1aPublic:
+        Value: !Sub "${TeamName}-public-1"
+  RouteTableAssociation1Public:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref SubnetAz1aPublic
+      SubnetId: !Ref Subnet1Public
       RouteTableId: !Ref RouteTable
 
-  # SUBNET EU-CENTRAL-1B PUBLIC
-  SubnetAz1bPublic:
+  Subnet2Public:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
-      CidrBlock: !Ref VpcSubnetAz1bCidr
-      AvailabilityZone: "eu-central-1b"
+      CidrBlock: !Ref VpcSubnet2Cidr
+      AvailabilityZone:
+        Fn::Select:
+         - 0
+         - Fn::GetAZs: ''
       Tags:
       - Key: Name
-        Value: !Sub "${TeamName}-public [eu-central-1b]"
-  RouteTableAssociationAz1bPublic:
+        Value: !Sub "${TeamName}-public-2"
+  RouteTableAssociation2Public:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref SubnetAz1bPublic
+      SubnetId: !Ref Subnet2Public
       RouteTableId: !Ref RouteTable
 
-  # SUBNET EU-CENTRAL-1C PUBLIC
-  SubnetAz1cPublic:
+  Subnet3Public:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
-      CidrBlock: !Ref VpcSubnetAz1cCidr
-      AvailabilityZone: "eu-central-1c"
+      CidrBlock: !Ref VpcSubnet3Cidr
+      AvailabilityZone:
+        Fn::Select:
+         - 0
+         - Fn::GetAZs: ''
       Tags:
       - Key: Name
-        Value: !Sub "${TeamName}-public [eu-central-1c]"
-  RouteTableAssociationAz1cPublic:
+        Value: !Sub "${TeamName}-public-3"
+  RouteTableAssociation3Public:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref SubnetAz1cPublic
+      SubnetId: !Ref Subnet3Public
       RouteTableId: !Ref RouteTable
 
 Outputs:
@@ -119,15 +126,15 @@ Outputs:
       Name: !Sub "${AWS::StackName}-HostedZoneName"
     Value: !Sub "${TeamName}.${DnsRootDomain}"
 
-  SubnetAz1aPublicId:
+  Subnet1PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-SubnetAz1aPublicId"
-    Value: !Ref SubnetAz1aPublic
-  SubnetAz1bPublicId:
+      Name: !Sub "${AWS::StackName}-Subnet1PublicId"
+    Value: !Ref Subnet1Public
+  Subnet2PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-SubnetAz1bPublicId"
-    Value: !Ref SubnetAz1bPublic
-  SubnetAz1cPublicId:
+      Name: !Sub "${AWS::StackName}-Subnet2PublicId"
+    Value: !Ref Subnet2Public
+  Subnet3PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-SubnetAz1cPublicId"
-    Value: !Ref SubnetAz1cPublic
+      Name: !Sub "${AWS::StackName}-Subnet3PublicId"
+    Value: !Ref Subnet3Public
