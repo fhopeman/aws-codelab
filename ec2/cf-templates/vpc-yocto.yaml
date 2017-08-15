@@ -128,9 +128,9 @@ Resources:
         WaitOnResourceSignals: "true"
     Properties:
       VPCZoneIdentifier:
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1aPublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1bPublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-SubnetAz1cPublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet1PublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet2PublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet3PublicId"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       HealthCheckType: "ELB"
       HealthCheckGracePeriod: "120"

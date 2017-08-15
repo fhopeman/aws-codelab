@@ -2,4 +2,4 @@
 VPCStackName: "vpc-TEAM_NAME"
 TeamName:     "TEAM_NAME"
 KeyName:      "codelab-TEAM_NAME"
-ImageId:      "ami-5b06d634"
+ImageId:      "ami-82be18ed"
