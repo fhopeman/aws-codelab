@@ -80,7 +80,7 @@ Resources:
       CidrBlock: !Ref VpcSubnet2Cidr
       AvailabilityZone:
         Fn::Select:
-         - 0
+         - 1
          - Fn::GetAZs: ''
       Tags:
       - Key: Name
@@ -99,7 +99,7 @@ Resources:
       CidrBlock: !Ref VpcSubnet3Cidr
       AvailabilityZone:
         Fn::Select:
-         - 0
+         - 2
          - Fn::GetAZs: ''
       Tags:
       - Key: Name
