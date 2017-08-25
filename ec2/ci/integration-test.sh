@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ -z "${YOCTO_URL}" ]; then
     echo "Please set environment variable YOCTO_URL"
     exit 1

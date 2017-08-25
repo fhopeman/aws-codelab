@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ -z "${PROFILE}" ]; then
     echo "Please set environment variable PROFILE"
     exit 1
