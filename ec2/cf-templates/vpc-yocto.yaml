@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   VPCStackName:
@@ -33,7 +33,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -45,7 +45,7 @@ Resources:
       Policies:
         - PolicyName: ECRpull
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
             - Effect: Allow
               Action:
@@ -125,7 +125,7 @@ Resources:
         MinInstancesInService: "1"
         MaxBatchSize: "1"
         PauseTime: PT1M
-        WaitOnResourceSignals: "true"
+        WaitOnResourceSignals: true
     Properties:
       VPCZoneIdentifier:
       - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet1PublicId"}
@@ -140,4 +140,4 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
-          PropagateAtLaunch: "true"
+          PropagateAtLaunch: true

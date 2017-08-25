@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   VPCStackName:
@@ -33,7 +33,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -45,7 +45,7 @@ Resources:
       Policies:
         - PolicyName: ECRpull
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
             - Effect: Allow
               Action:
@@ -123,7 +123,7 @@ Resources:
         - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet3PublicId"}
       SecurityGroups:
         - !Ref SecurityGroupELB
-      CrossZone: "true"
+      CrossZone: true
       Listeners:
       - LoadBalancerPort: "80"
         InstancePort: "8080"
@@ -158,7 +158,7 @@ Resources:
         MinInstancesInService: "1"
         MaxBatchSize: "1"
         PauseTime: PT1M
-        WaitOnResourceSignals: "true"
+        WaitOnResourceSignals: true
     DependsOn:
       - YoctoElasticLoadBalancer
     Properties:
@@ -177,7 +177,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${TeamName}-Yocto"
-          PropagateAtLaunch: "true"
+          PropagateAtLaunch: true
 
   ScaleUpPolicy:
     Type: AWS::AutoScaling::ScalingPolicy

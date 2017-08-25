@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   TeamName:
@@ -22,8 +22,8 @@ Resources:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCidr
-      EnableDnsSupport: 'true'
-      EnableDnsHostnames: 'false'
+      EnableDnsSupport: true
+      EnableDnsHostnames: false
       InstanceTenancy: default
       Tags:
         - Key: Name
