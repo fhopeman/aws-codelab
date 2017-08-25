@@ -19,7 +19,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Allow access via http"
-      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
       SecurityGroupIngress:
         - IpProtocol: "tcp"
           FromPort: "8080"
@@ -27,7 +27,7 @@ Resources:
           CidrIp: "172.16.0.0/16"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto"
+          Value: !Sub "${TeamName}-yocto"
 
   Role:
     Type: AWS::IAM::Role
@@ -103,7 +103,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Allow access via http"
-      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: "80"
@@ -111,16 +111,16 @@ Resources:
           CidrIp: "0.0.0.0/0"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto-ELB"
+          Value: !Sub "${TeamName}-yocto-elb"
 
   YoctoElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
-      LoadBalancerName: !Sub "${TeamName}-Yocto-ELB"
+      LoadBalancerName: !Sub "${TeamName}-yocto-elb"
       Subnets:
-        - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet1PublicId"}
-        - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet2PublicId"}
-        - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet3PublicId"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-1-public-id"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-2-public-id"}
+        - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-3-public-id"}
       SecurityGroups:
         - !Ref SecurityGroupELB
       CrossZone: true
@@ -139,8 +139,8 @@ Resources:
     Type: AWS::Route53::RecordSet
     Properties:
       Comment: "DNS name"
-      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneId"}
-      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-HostedZoneName"} ] ]
+      HostedZoneId: !ImportValue {"Fn::Sub": "${VPCStackName}-hosted-zone-id"}
+      Name: !Join [ "", [ "yocto.", !ImportValue {"Fn::Sub": "${VPCStackName}-hosted-zone-name"} ] ]
       Type: "A"
       AliasTarget:
         HostedZoneId: !GetAtt YoctoElasticLoadBalancer.CanonicalHostedZoneNameID
@@ -163,11 +163,11 @@ Resources:
       - YoctoElasticLoadBalancer
     Properties:
       LoadBalancerNames:
-        - !Sub "${TeamName}-Yocto-ELB"
+        - !Sub "${TeamName}-yocto-elb"
       VPCZoneIdentifier:
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet1PublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet2PublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet3PublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-1-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-2-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-3-public-id"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       HealthCheckType: "ELB"
       HealthCheckGracePeriod: "120"
@@ -176,7 +176,7 @@ Resources:
       MaxSize: "2"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto"
+          Value: !Sub "${TeamName}-yocto"
           PropagateAtLaunch: true
 
   ScaleUpPolicy:
@@ -208,7 +208,7 @@ Resources:
       Namespace: "AWS/ELB"
       Dimensions:
       - Name: LoadBalancerName
-        Value: !Sub "${TeamName}-Yocto-ELB"
+        Value: !Sub "${TeamName}-yocto-elb"
       ComparisonOperator: "GreaterThanThreshold"
       MetricName: "RequestCount"
 
@@ -225,6 +225,6 @@ Resources:
       Namespace: "AWS/ELB"
       Dimensions:
       - Name: LoadBalancerName
-        Value: !Sub "${TeamName}-Yocto-ELB"
+        Value: !Sub "${TeamName}-yocto-elb"
       ComparisonOperator: "LessThanThreshold"
       MetricName: "RequestCount"

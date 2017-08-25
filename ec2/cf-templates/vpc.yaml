@@ -44,7 +44,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: !Sub "${TeamName}-RouteTablePublic"
+        Value: !Sub "${TeamName}-route-table-public"
 
   RoutePublic:
     Type: AWS::EC2::Route
@@ -114,21 +114,21 @@ Outputs:
 
   VPCId:
     Export:
-      Name: !Sub "${AWS::StackName}-VPCId"
+      Name: !Sub "${AWS::StackName}-vpc-id"
     Value: !Ref VPC
   VPCCidr:
       Export:
-        Name: !Sub "${AWS::StackName}-VPCCidr"
+        Name: !Sub "${AWS::StackName}-vpc-cidr"
       Value: !Ref VpcCidr
   Subnet1PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet1PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-1-public-id"
     Value: !Ref Subnet1Public
   Subnet2PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet2PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-2-public-id"
     Value: !Ref Subnet2Public
   Subnet3PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet3PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-3-public-id"
     Value: !Ref Subnet3Public
