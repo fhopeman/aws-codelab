@@ -120,12 +120,6 @@ Outputs:
       Export:
         Name: !Sub "${AWS::StackName}-VPCCidr"
       Value: !Ref VpcCidr
-
-  HostedZoneName:
-    Export:
-      Name: !Sub "${AWS::StackName}-HostedZoneName"
-    Value: !Sub "${TeamName}.${DnsRootDomain}"
-
   Subnet1PublicId:
     Export:
       Name: !Sub "${AWS::StackName}-Subnet1PublicId"
