@@ -59,10 +59,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet1Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 0
-         - Fn::GetAZs: ''
+      AvailabilityZone: "eu-central-1a"
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-1"
@@ -78,10 +75,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet2Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 1
-         - Fn::GetAZs: ''
+      AvailabilityZone: "eu-central-1b"
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-2"
@@ -97,13 +91,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet3Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 2
-         - Fn::GetAZs: ''
-      Tags:
-      - Key: Name
-        Value: !Sub "${TeamName}-public-3"
+      AvailabilityZone: "eu-central-1c"
   RouteTableAssociation3Public:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -111,7 +99,6 @@ Resources:
       RouteTableId: !Ref RouteTable
 
 Outputs:
-
   VPCId:
     Export:
       Name: !Sub "${AWS::StackName}-vpc-id"
