@@ -14,8 +14,6 @@ Parameters:
     Type: String
   VpcSubnet3Cidr:
     Type: String
-  Region:
-    Type: String
 
 Resources:
   VPC:

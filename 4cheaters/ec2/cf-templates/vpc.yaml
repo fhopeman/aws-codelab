@@ -14,8 +14,6 @@ Parameters:
     Type: String
   VpcSubnet3Cidr:
     Type: String
-  Region:
-    Type: String
 
 Resources:
   VPC:
@@ -65,10 +63,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet1Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 0
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 0, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-1"
@@ -84,10 +79,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet2Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 1
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 1, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-2"
@@ -103,10 +95,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet3Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 2
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 2, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-3"
