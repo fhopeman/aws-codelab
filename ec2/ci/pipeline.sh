@@ -17,7 +17,7 @@ REGION=${REGION:-"eu-central-1"}
 bundle check || bundle install
 
 # 1. Deploy vpc
-bundle exec autostacker24 update --template 4cheaters/ec2/cf-templates/vpc.yaml \
+bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
     --params ec2/properties/vpc.yaml \
     --stack "vpc-${TEAM_NAME}" \
     --region "${REGION}" \
