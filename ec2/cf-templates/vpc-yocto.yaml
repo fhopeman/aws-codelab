@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   VPCStackName:
@@ -19,7 +19,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Allow access via http"
-      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
       SecurityGroupIngress:
         - IpProtocol: "tcp"
           FromPort: "8080"
@@ -27,13 +27,13 @@ Resources:
           CidrIp: "0.0.0.0/0"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto"
+          Value: !Sub "${TeamName}-yocto"
 
   Role:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -45,7 +45,7 @@ Resources:
       Policies:
         - PolicyName: ECRpull
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
             - Effect: Allow
               Action:
@@ -103,7 +103,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Allow access via http"
-      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: "80"
@@ -111,7 +111,7 @@ Resources:
           CidrIp: "0.0.0.0/0"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto-ELB"
+          Value: !Sub "${TeamName}-yocto-elb"
 
   ###### auto scaling group ######
 
@@ -125,12 +125,12 @@ Resources:
         MinInstancesInService: "1"
         MaxBatchSize: "1"
         PauseTime: PT1M
-        WaitOnResourceSignals: "true"
+        WaitOnResourceSignals: true
     Properties:
       VPCZoneIdentifier:
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet1PublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet2PublicId"}
-      - !ImportValue {"Fn::Sub": "${VPCStackName}-Subnet3PublicId"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-1-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-2-public-id"}
+      - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-3-public-id"}
       LaunchConfigurationName: !Ref LaunchConfiguration
       HealthCheckType: "ELB"
       HealthCheckGracePeriod: "120"
@@ -139,5 +139,5 @@ Resources:
       MaxSize: "2"
       Tags:
         - Key: Name
-          Value: !Sub "${TeamName}-Yocto"
-          PropagateAtLaunch: "true"
+          Value: !Sub "${TeamName}-yocto"
+          PropagateAtLaunch: true

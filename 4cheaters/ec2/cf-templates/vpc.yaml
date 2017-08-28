@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   TeamName:
@@ -14,16 +14,14 @@ Parameters:
     Type: String
   VpcSubnet3Cidr:
     Type: String
-  Region:
-    Type: String
 
 Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCidr
-      EnableDnsSupport: 'true'
-      EnableDnsHostnames: 'false'
+      EnableDnsSupport: true
+      EnableDnsHostnames: false
       InstanceTenancy: default
       Tags:
         - Key: Name
@@ -50,7 +48,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
       - Key: Name
-        Value: !Sub "${TeamName}-RouteTablePublic"
+        Value: !Sub "${TeamName}-route-table-public"
 
   RoutePublic:
     Type: AWS::EC2::Route
@@ -65,10 +63,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet1Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 0
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 0, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-1"
@@ -84,10 +79,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet2Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 1
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 1, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-2"
@@ -103,10 +95,7 @@ Resources:
       VpcId: !Ref VPC
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet3Cidr
-      AvailabilityZone:
-        Fn::Select:
-         - 2
-         - Fn::GetAZs: ''
+      AvailabilityZone: !Select [ 2, { "Fn::GetAZs": { Ref: "AWS::Region" } } ]
       Tags:
       - Key: Name
         Value: !Sub "${TeamName}-public-3"
@@ -117,34 +106,31 @@ Resources:
       RouteTableId: !Ref RouteTable
 
 Outputs:
-
   VPCId:
     Export:
-      Name: !Sub "${AWS::StackName}-VPCId"
+      Name: !Sub "${AWS::StackName}-vpc-id"
     Value: !Ref VPC
   VPCCidr:
       Export:
-        Name: !Sub "${AWS::StackName}-VPCCidr"
+        Name: !Sub "${AWS::StackName}-vpc-cidr"
       Value: !Ref VpcCidr
-
   HostedZoneId:
     Export:
-      Name: !Sub "${AWS::StackName}-HostedZoneId"
+      Name: !Sub "${AWS::StackName}-hosted-zone-id"
     Value: !Ref Route53HostedZone
   HostedZoneName:
     Export:
-      Name: !Sub "${AWS::StackName}-HostedZoneName"
+      Name: !Sub "${AWS::StackName}-hosted-zone-name"
     Value: !Sub "${TeamName}.${DnsRootDomain}"
-
   Subnet1PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet1PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-1-public-id"
     Value: !Ref Subnet1Public
   Subnet2PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet2PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-2-public-id"
     Value: !Ref Subnet2Public
   Subnet3PublicId:
     Export:
-      Name: !Sub "${AWS::StackName}-Subnet3PublicId"
+      Name: !Sub "${AWS::StackName}-subnet-3-public-id"
     Value: !Ref Subnet3Public

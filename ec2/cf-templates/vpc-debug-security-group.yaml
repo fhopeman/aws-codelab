@@ -1,5 +1,5 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
   VPCStackName:
@@ -13,7 +13,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: "Allow ssh access through instance"
-      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-VPCId"}
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: "22"
