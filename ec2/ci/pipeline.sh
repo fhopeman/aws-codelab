@@ -16,7 +16,7 @@ REGION=${REGION:-"eu-central-1"}
 
 bundle check || bundle install
 
-aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc.yaml
+aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc.yaml --profile "${PROFILE}"
 
 # 1. Deploy vpc
 bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
@@ -26,7 +26,7 @@ bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
     --profile "${PROFILE}"
 
 # 2. Deploy debug security group
-#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-debug-security-group.yaml
+#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-debug-security-group.yaml --profile "${PROFILE}"
 #bundle exec autostacker24 update --template ec2/cf-templates/vpc-debug-security-group.yaml \
 #    --stack "vpc-${TEAM_NAME}-debug-sg" \
 #    --param VPCStackName="vpc-${TEAM_NAME}" \
@@ -35,7 +35,7 @@ bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
 #    --profile "${PROFILE}"
 
 # 3. Deploy yocto
-#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-yocto.yaml
+#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-yocto.yaml --profile "${PROFILE}"
 #bundle exec autostacker24 update --template ec2/cf-templates/vpc-yocto.yaml \
 #    --params ec2/properties/yocto.yaml \
 #    --stack "vpc-${TEAM_NAME}-yocto" \
