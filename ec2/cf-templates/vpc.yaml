@@ -90,6 +90,9 @@ Resources:
       MapPublicIpOnLaunch: true
       CidrBlock: !Ref VpcSubnet3Cidr
       AvailabilityZone: "eu-central-1c"
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-public-3"
   RouteTableAssociation3Public:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
