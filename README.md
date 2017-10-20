@@ -51,3 +51,8 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
      * [Hint](http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html#input-variable-reference)
 5. Expert challenge: If you change the dynamoDb table name, it should be at one position (`chat-resources.yaml`).
    Currently you have to change it at three positions.
+
+## 4. Useful Links:
+* AWS Cloudformation Documentation: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
+* AWS IAM Policy Generator: https://awspolicygen.s3.amazonaws.com/policygen.html
+* EC2 Instances pricing overview: http://www.ec2instances.info/?region=eu-central-1
