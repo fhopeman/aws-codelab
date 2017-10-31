@@ -4,9 +4,10 @@ Provides aws codelab challenges ..
 ## 1. Preparation
 ### 1.1 Tools
 1. Ruby, version >=2.0.0 (https://rvm.io/rvm/install)
-2. Bundler `gem install bundler` (https://bundler.io/)
-3. AWS CLI (https://aws.amazon.com/de/cli/)
-4. cli53 (optional, https://github.com/barnybug/cli53#installation)
+2. Ruby header files for building gems with native extensions (`apt-get install ruby-dev` on Ubuntu systems)
+3. Bundler `gem install bundler` (https://bundler.io/)
+4. AWS CLI (https://aws.amazon.com/de/cli/)
+5. cli53 (optional, https://github.com/barnybug/cli53#installation)
 ### 1.2 Install autostacker24
 Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
 
