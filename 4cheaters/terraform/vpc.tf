@@ -10,14 +10,26 @@ resource "aws_subnet" "publicsubnets" {
   cidr_block = "${cidrsubnet(aws_vpc.vpc.cidr_block, 5, count.index)}"
   vpc_id = "${aws_vpc.vpc.id}"
   availability_zone = "${element(data.aws_availability_zones.current.names, count.index)}"
+
+  tags {
+    Name = "${var.team_name}-${element(data.aws_availability_zones.current.names, count.index)}-sn"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "${var.team_name}-ig"
+  }
 }
 
 resource "aws_route_table" "routetable" {
   vpc_id = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "${var.team_name}-rt"
+  }
 }
 
 resource "aws_route" "routepublic" {
