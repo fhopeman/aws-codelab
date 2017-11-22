@@ -21,3 +21,15 @@ variable "TeamName" {
   type = "string"
 }
 
+variable "amiID" {
+  type = "string"
+}
+
+variable "instanceType" {
+  type = "string"
+  default = "t2.nano"
+}
+
+variable "sshkeyname" {
+  type = "string"
+}
