@@ -1,3 +1,4 @@
 *tfstate*
 .terraform
 plan.out
+*.tfvars
