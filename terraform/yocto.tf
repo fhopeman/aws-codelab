@@ -24,8 +24,8 @@ data "template_file" "userdata" {
 
 resource "aws_launch_configuration" "yoctolaunch" {
   lifecycle { create_before_destroy = true }
-  image_id = "${var.amiID}"
-  instance_type = "${var.instanceType}"
+  image_id = "${var.ami_id}"
+  instance_type = "${var.instance_type}"
   key_name = "${var.sshkeyname}"
   user_data = "${data.template_file.userdata.rendered}"
   security_groups = ["${aws_security_group.httptraffic.id}"]
@@ -48,7 +48,7 @@ resource "aws_autoscaling_group" "yoctoautoscaling" {
   tags = [
     {
       key                 = "Name"
-      value               = "${var.TeamName}-yocto"
+      value               = "${var.team_name}-yocto"
       propagate_at_launch = true
     }
   ]

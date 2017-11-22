@@ -7,20 +7,20 @@ variable "region" {
   default = "eu-central-1"
 }
 
-variable "vpcCidr" {
+variable "vpc_cidr" {
   type = "string"
   default = "172.16.0.0/16"
 }
 
-variable "TeamName" {
+variable "team_name" {
   type = "string"
 }
 
-variable "amiID" {
+variable "ami_id" {
   type = "string"
 }
 
-variable "instanceType" {
+variable "instance_type" {
   type = "string"
   default = "t2.nano"
 }
