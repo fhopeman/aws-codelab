@@ -12,11 +12,6 @@ variable "vpcCidr" {
   default = "172.16.0.0/16"
 }
 
-variable "availabilityZones" {
-  type = "list"
-  default = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-}
-
 variable "TeamName" {
   type = "string"
 }
