@@ -1,5 +1,5 @@
 ---
-TeamName:       "TEAM_NAME"
+TeamName:       "foobar"
 DnsRootDomain:  "DNS_ROOT_DOMAIN"
 VpcCidr:        "172.16.0.0/16"
 VpcSubnet1Cidr: "172.16.0.0/21"
