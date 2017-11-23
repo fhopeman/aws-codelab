@@ -3,20 +3,18 @@ Provides aws codelab challenges ..
 
 ## 1. Preparation
 ### 1.1 Tools
-1. AWS CLI (https://aws.amazon.com/de/cli/)
-2. cli53 (optional, https://github.com/barnybug/cli53#installation)
+- AWS CLI (https://aws.amazon.com/de/cli/)
 
 ### 1.2 Install tools for cloudformation part
-1. Ruby, version >=2.0.0 (https://rvm.io/rvm/install)
-2. Ruby header files for building gems with native extensions (`apt-get install ruby-dev` on Ubuntu systems)
-3. Bundler `gem install bundler` (https://bundler.io/)
-Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
+- Ruby, version >=2.0.0 (https://rvm.io/rvm/install)
+- Ruby header files for building gems with native extensions (`apt-get install ruby-dev` on Ubuntu systems)
+- Bundler `gem install bundler` (https://bundler.io/)
+- Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
 
 ### 1.3 Install terraform for terraform part
-See https://www.terraform.io/downloads.html (OSX `brew install terraform`)
-No ruby needed for terraform (skip 1.2)
+- See https://www.terraform.io/downloads.html (OSX `brew install terraform`)
 
-## 2. EC2 Codelab
+## 2. EC2 Codelab Challenges
 1. Create DynamoDB to show the general concept of AWS services
 2. Theory EC2
 3. Create VPC
@@ -44,7 +42,7 @@ No ruby needed for terraform (skip 1.2)
      * [TF Hint1](https://www.terraform.io/docs/providers/aws/r/cloudwatch_metric_alarm.html)
      * [TF Hint2](https://www.terraform.io/docs/providers/aws/r/autoscaling_policy.html)
 
-## 3. Lambda Codelab
+## 3. Lambda Codelab Challenges
 1. Create DynamoDB to show the general concept of AWS services
 2. Theory Lambda
 3. Deploy hello world example
