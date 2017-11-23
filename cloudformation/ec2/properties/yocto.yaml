@@ -1,0 +1,5 @@
+---
+VPCStackName: "vpc-foobar"
+TeamName:     "foobar"
+KeyName:      "some-keypair"
+ImageId:      "ami-82be18ed"

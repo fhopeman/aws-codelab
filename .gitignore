@@ -1,2 +1,6 @@
 .idea
 jmeter.log
+*tfstate*
+.terraform
+plan.out
+*.tfvars

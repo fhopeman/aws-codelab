@@ -2,6 +2,8 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" ; pwd -P)"
+
 if [ -z "${PROFILE}" ]; then
     echo "Please set environment variable PROFILE"
     exit 1
@@ -14,20 +16,26 @@ fi
 
 REGION=${REGION:-"eu-central-1"}
 
+pushd "${SCRIPT_DIR}/.." > /dev/null
+
 bundle check || bundle install
 
-aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc.yaml --profile "${PROFILE}"
+bundle exec autostacker24 validate --template cf-templates/vpc.yaml \
+    --profile "${PROFILE}" \
+    --region "${REGION}"
 
 # 1. Deploy vpc
-bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
-    --params ec2/properties/vpc.yaml \
+bundle exec autostacker24 update --template cf-templates/vpc.yaml \
+    --params properties/vpc.yaml \
     --stack "vpc-${TEAM_NAME}" \
     --region "${REGION}" \
     --profile "${PROFILE}"
 
 # 2. Deploy debug security group
-#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-debug-security-group.yaml --profile "${PROFILE}"
-#bundle exec autostacker24 update --template ec2/cf-templates/vpc-debug-security-group.yaml \
+#bundle exec autostacker24 validate --template cf-templates/vpc-debug-security-group.yaml \
+#    --profile "${PROFILE}" \
+#    --region "${REGION}"
+#bundle exec autostacker24 update --template cf-templates/vpc-debug-security-group.yaml \
 #    --stack "vpc-${TEAM_NAME}-debug-sg" \
 #    --param VPCStackName="vpc-${TEAM_NAME}" \
 #    --param TeamName="${TEAM_NAME}" \
@@ -35,9 +43,11 @@ bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
 #    --profile "${PROFILE}"
 
 # 3. Deploy yocto
-#aws cloudformation validate-template --template-body file://ec2/cf-templates/vpc-yocto.yaml --profile "${PROFILE}"
-#bundle exec autostacker24 update --template ec2/cf-templates/vpc-yocto.yaml \
-#    --params ec2/properties/yocto.yaml \
+#bundle exec autostacker24 validate --template cf-templates/vpc-yocto.yaml \
+#    --profile "${PROFILE}" \
+#    --region "${REGION}"
+#bundle exec autostacker24 update --template cf-templates/vpc-yocto.yaml \
+#    --params properties/yocto.yaml \
 #    --stack "vpc-${TEAM_NAME}-yocto" \
 #    --region "${REGION}" \
 #    --profile "${PROFILE}"
@@ -45,7 +55,9 @@ bundle exec autostacker24 update --template ec2/cf-templates/vpc.yaml \
 # 4. Run integration tests if YOCTO_URL present
 if [ -n "${YOCTO_URL}" ]; then
     echo -e "\nStarting integration tests .."
-    ./ec2/ci/integration-test.sh
+    ./ci/integration-test.sh
 else
     echo -e "\nSet YOCTO_URL to run integration tests"
 fi
+
+popd > /dev/null

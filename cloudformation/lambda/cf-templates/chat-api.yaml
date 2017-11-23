@@ -12,7 +12,7 @@ Resources:
     Properties:
       Name: !Sub "chat-api-${TeamName}"
       Description: "API used for chatting"
-      FailOnWarnings : "true"
+      FailOnWarnings: "true"
 
   ChatApiResource:
     Type: AWS::ApiGateway::Resource
