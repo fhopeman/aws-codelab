@@ -14,7 +14,7 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
 
 ### 1.3 Install terraform for terraform part
 See https://www.terraform.io/downloads.html (OSX `brew install terraform`)
-No ruby needed for terraform (skip 1.1 1.-3.)
+No ruby needed for terraform (skip 1.2)
 
 ## 2. EC2 Codelab
 1. Create DynamoDB to show the general concept of AWS services
