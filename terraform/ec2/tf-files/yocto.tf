@@ -1,6 +1,6 @@
 // 3. Deploy yocto
 //resource "aws_security_group" "instance" {
-//  name = "Allow access via http"
+//  name = "Allow access to instance"
 //  vpc_id = "${aws_vpc.vpc.id}"
 //
 //  ingress {

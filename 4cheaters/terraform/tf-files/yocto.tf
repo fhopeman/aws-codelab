@@ -1,5 +1,5 @@
 resource "aws_security_group" "instance" {
-  name = "Allow ELB access to instance"
+  name = "Allow access to instance"
   vpc_id = "${aws_vpc.vpc.id}"
 
   ingress {
@@ -22,7 +22,7 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group" "elb" {
-  name = "Allow public access via http"
+  name = "Allow public access to elb"
   vpc_id = "${aws_vpc.vpc.id}"
 
   ingress {
