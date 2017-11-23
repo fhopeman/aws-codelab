@@ -15,7 +15,7 @@ terraform apply \
   -input=false \
   plan.out
 
-# 5. Run integration tests if API_GATEWAY_ID present
+# Run integration tests if YOCTO_URL present
 if [ -n "${YOCTO_URL}" ]; then
     echo -e "\nStarting integration tests .."
     ./ci/integration-test.sh

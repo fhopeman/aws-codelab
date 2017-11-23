@@ -6,13 +6,13 @@ Provides aws codelab challenges ..
 - AWS CLI (https://aws.amazon.com/de/cli/)
 
 ### 1.2 Install tools for cloudformation part
-- Ruby, version >=2.0.0 (https://rvm.io/rvm/install)
+- [Ruby](https://rvm.io/rvm/install), version >=2.0.0
 - Ruby header files for building gems with native extensions (`apt-get install ruby-dev` on Ubuntu systems)
-- Bundler `gem install bundler` (https://bundler.io/)
-- Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
+- [Bundler](https://bundler.io/): `gem install bundler`
+- [autostacker24](https://github.com/AutoScout24/autostacker24): Run `bundle install` in the root directory.
 
 ### 1.3 Install terraform for terraform part
-- See https://www.terraform.io/downloads.html (OSX `brew install terraform`)
+- [Terraform](https://www.terraform.io/downloads.html) (OSX `brew install terraform`)
 
 ## 2. EC2 Codelab Challenges
 1. Create DynamoDB to show the general concept of AWS services
