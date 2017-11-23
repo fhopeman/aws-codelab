@@ -29,7 +29,7 @@ Provides aws codelab challenges ..
      * [TF Hint 2](https://www.terraform.io/docs/providers/aws/d/security_group.html)
    * Experts would remove the direct instance access via port 8080 now
    * Theory DNS
-   * Create your own DNS entry
+   * Create your own DNS entry (optional)
      * [CF Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html)
      * [CF Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
      * [TF Hint 1](https://www.terraform.io/docs/providers/aws/d/route53_zone.html)
