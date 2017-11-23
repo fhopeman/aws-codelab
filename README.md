@@ -3,13 +3,18 @@ Provides aws codelab challenges ..
 
 ## 1. Preparation
 ### 1.1 Tools
+1. AWS CLI (https://aws.amazon.com/de/cli/)
+2. cli53 (optional, https://github.com/barnybug/cli53#installation)
+
+### 1.2 Install tools for cloudformation part
 1. Ruby, version >=2.0.0 (https://rvm.io/rvm/install)
 2. Ruby header files for building gems with native extensions (`apt-get install ruby-dev` on Ubuntu systems)
 3. Bundler `gem install bundler` (https://bundler.io/)
-4. AWS CLI (https://aws.amazon.com/de/cli/)
-5. cli53 (optional, https://github.com/barnybug/cli53#installation)
-### 1.2 Install autostacker24
 Run `bundle install` in the root directory to install [autostacker24](https://github.com/AutoScout24/autostacker24).
+
+### 1.3 Install terraform for terraform part
+See https://www.terraform.io/downloads.html (OSX `brew install terraform`)
+No ruby needed for terraform (skip 1.1 1.-3.)
 
 ## 2. EC2 Codelab
 1. Create DynamoDB to show the general concept of AWS services
@@ -20,18 +25,24 @@ Run `bundle install` in the root directory to install [autostacker24](https://gi
    * auto scaling group
    * SSH access
    * ELB deployment
-     * [Hint 1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html)
-     * [Hint 2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html)
+     * [CF Hint 1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html)
+     * [CF Hint 2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html)
+     * [TF Hint 1](https://www.terraform.io/docs/providers/aws/r/elb.html)
+     * [TF Hint 2](https://www.terraform.io/docs/providers/aws/d/security_group.html)
    * Experts would remove the direct instance access via port 8080 now
    * Theory DNS
    * Create your own DNS entry
-     * [Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html)
-     * [Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
+     * [CF Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-hostedzone.html)
+     * [CF Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html)
+     * [TF Hint 1](https://www.terraform.io/docs/providers/aws/d/route53_zone.html)
+     * [TF Hint 2](https://www.terraform.io/docs/providers/aws/r/route53_record.html)
 6. Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
    * Short introduction to EC2 instance types
    * Autoscaling with CloudWatch alarms
-     * [Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html)
-     * [Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-policy.html)
+     * [CF Hint1](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html)
+     * [CF Hint2](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-policy.html)
+     * [TF Hint1](https://www.terraform.io/docs/providers/aws/r/cloudwatch_metric_alarm.html)
+     * [TF Hint2](https://www.terraform.io/docs/providers/aws/r/autoscaling_policy.html)
 
 ## 3. Lambda Codelab
 1. Create DynamoDB to show the general concept of AWS services
