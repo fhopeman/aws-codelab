@@ -4,12 +4,18 @@ variable "profile" {
 
 variable "region" {
   type = "string"
-  default = "eu-central-1"
+}
+
+variable "azs" {
+  type = "list"
 }
 
 variable "vpc_cidr" {
   type = "string"
-  default = "172.16.0.0/16"
+}
+
+variable "subnet_cidrs" {
+  type = "list"
 }
 
 variable "team_name" {
