@@ -90,6 +90,7 @@ Resources:
       StageName: "TEST"
 
   ChatApiStage:
+    DependsOn: [ChatApi]
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: !Ref ApiDeployment
@@ -98,8 +99,8 @@ Resources:
           HttpMethod: "*"
           LoggingLevel: "INFO"
           ResourcePath: "/*"
-      "RestApiId": !Ref ChatApi
-      "StageName": "LATEST"
+      RestApiId: !Ref ChatApi
+      StageName: "LATEST"
 
   ###### CloudWatch policy ######
 
