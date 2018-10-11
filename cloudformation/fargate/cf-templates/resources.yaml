@@ -25,6 +25,10 @@ Resources:
       - Key: Name
         Value: !Sub "${TeamName}-yocto"
 
+  # This is an IAM role which authorizes ECS to manage resources on your
+  # account on your behalf, such as updating your load balancer with the
+  # details of where your containers are, so that traffic can reach your
+  # containers.
   ECSRole:
     Type: AWS::IAM::Role
     Properties:
@@ -85,32 +89,6 @@ Resources:
             - 'logs:CreateLogStream'
             - 'logs:PutLogEvents'
             Resource: '*'
-
-  # this role is used by autoscaling events
-  ApplicationAutoScalingRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-              - application-autoscaling.amazonaws.com
-            Action:
-            - sts:AssumeRole
-      Path: "/"
-      Policies:
-      - PolicyName: esc-scaling-policy
-        PolicyDocument:
-          Statement:
-          - Effect: Allow
-            Action:
-            - ecs:UpdateService
-            - ecs:DescribeServices
-            - application-autoscaling:*
-            - cloudwatch:DescribeAlarms
-            - cloudwatch:GetMetricStatistics
-            Resource: "*"
 
 Outputs:
   ClusterName:
