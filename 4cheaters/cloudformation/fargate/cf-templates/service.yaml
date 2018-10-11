@@ -142,34 +142,34 @@ Resources:
         Values: [!Ref 'Path']
       ListenerArn: !ImportValue {"Fn::Sub": "${VPCStackName}-ListenerId"}
       Priority: !Ref 'Priority'
-#
-#  ScalableTarget:
-#    Type: AWS::ApplicationAutoScaling::ScalableTarget
-#    Properties:
-#      MaxCapacity: 3
-#      MinCapacity: 1
-#      ResourceId: !Join [ "/", [ "service", !ImportValue {"Fn::Sub": "${StackName}:ClusterName"}, !GetAtt Service.Name ] ]
-#      RoleARN:
-#        Fn::ImportValue:
-#          !Join [':', [!Ref 'StackName', 'ApplicationAutoScalingRole']]
-#      ScalableDimension: ecs:service:DesiredCount
-#      ServiceNamespace: ecs
-#
-#  AutoScalingPolicy:
-#    Type: AWS::ApplicationAutoScaling::ScalingPolicy
-#    Properties:
-#      PolicyName: ECSScalingBlogPolicy
-#      PolicyType: TargetTrackingScaling
-#      ScalingTargetId:
-#        Ref: ScalableTarget
-#      ScalableDimension: ecs:service:DesiredCount
-#      ServiceNamespace: ecs
-#      TargetTrackingScalingPolicyConfiguration:
-#        TargetValue: 10.0
-#        ##Time waiting between adding new instances
-#        ScaleOutCooldown: 20
-#        ##Time waiting between removing old instances
-#        ScaleInCooldown: 60
-#        PredefinedMetricSpecification:
-#          PredefinedMetricType: ALBRequestCountPerTarget
-#          ResourceLabel: !Join [ "/", [ "app", "order-develop-alb", "816c2c8e8f042ece", "targetgroup", "checkout-template-fargate", "1c94066ec3fdf1f2"] ]
+
+  ScalableTarget:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 3
+      MinCapacity: 1
+      ResourceId: !Join [ "/", [ "service", !ImportValue {"Fn::Sub": "${ResourcesStackName}:ClusterName"}, !GetAtt Service.Name ] ]
+      RoleARN:
+        Fn::ImportValue:
+          !Join [':', [!Ref 'ResourcesStackName', 'ApplicationAutoScalingRole']]
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+
+  AutoScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: ECSScalingBlogPolicy
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId:
+        Ref: ScalableTarget
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 10.0
+        ##Time waiting between adding new instances
+        ScaleOutCooldown: 20
+        ##Time waiting between removing old instances
+        ScaleInCooldown: 60
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ALBRequestCountPerTarget
+          ResourceLabel: !Join [ "/", [ !ImportValue {"Fn::Sub": "${VPCStackName}-alb-fullname"}, !GetAtt TargetGroup.TargetGroupFullName] ]
