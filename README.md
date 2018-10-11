@@ -70,6 +70,10 @@ Provides aws codelab challenges ..
     * [Hint1](https://docs.aws.amazon.com/de_de/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html)
     * [Hint2](https://docs.aws.amazon.com/de_de/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html)
 5. Add an ALB
+    * [Hint1](https://docs.aws.amazon.com/de_de/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html)
+    * [Hint2](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html)
+    * [Hint3](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html)
+    * Expert: Remove direct access to the service
 6. Add Add Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
 
 ## 5. Useful Links:
