@@ -1,0 +1,7 @@
+---
+TeamName:       "foobar"
+DnsRootDomain:  "DNS_ROOT_DOMAIN"
+VpcCidr:        "172.16.0.0/16"
+VpcSubnet1Cidr: "172.16.0.0/21"
+VpcSubnet2Cidr: "172.16.8.0/21"
+VpcSubnet3Cidr: "172.16.16.0/21"

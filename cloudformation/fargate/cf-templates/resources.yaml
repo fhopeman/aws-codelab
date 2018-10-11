@@ -1,0 +1,135 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  VPCStackName:
+    Type: String
+  TeamName:
+    Type: String
+
+Resources:
+
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access via http"
+      VpcId: !ImportValue {"Fn::Sub": "${VPCStackName}-vpc-id"}
+      SecurityGroupIngress:
+      - IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        CidrIp: "0.0.0.0/0"
+      Tags:
+      - Key: Name
+        Value: !Sub "${TeamName}-yocto"
+
+  ECSRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'fargate-ecs-role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-service-policy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            # Rules which allow ECS to attach network interfaces to instances
+            # on your behalf in order for awsvpc networking mode to work right
+            - 'ec2:AttachNetworkInterface'
+            - 'ec2:CreateNetworkInterface'
+            - 'ec2:CreateNetworkInterfacePermission'
+            - 'ec2:DeleteNetworkInterface'
+            - 'ec2:DeleteNetworkInterfacePermission'
+            - 'ec2:Describe*'
+            - 'ec2:DetachNetworkInterface'
+            Resource: '*'
+
+  # This is a role which is used by the ECS tasks themselves.
+  ECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'fargate-task-role'
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs-tasks.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-task-execution-policy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            # Allow the ECS Tasks to download images from ECR
+            - 'ecr:GetAuthorizationToken'
+            - 'ecr:BatchCheckLayerAvailability'
+            - 'ecr:GetDownloadUrlForLayer'
+            - 'ecr:BatchGetImage'
+            # Allow task to write metrics
+            - 'cloudwatch:PutMetricData'
+            - 'cloudwatch:GetMetricStatistics'
+            - 'cloudwatch:ListMetrics'
+            # Allow task to write logs
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:PutLogEvents'
+            Resource: '*'
+
+  # this role is used by autoscaling events
+  ApplicationAutoScalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+              - application-autoscaling.amazonaws.com
+            Action:
+            - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: esc-scaling-policy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - ecs:UpdateService
+            - ecs:DescribeServices
+            - application-autoscaling:*
+            - cloudwatch:DescribeAlarms
+            - cloudwatch:GetMetricStatistics
+            Resource: "*"
+
+Outputs:
+  ClusterName:
+    Description: The name of the ECS cluster
+    Value: !Ref 'ECSCluster'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ClusterName' ] ]
+  ECSTaskExecutionRole:
+    Description: The ARN of the ECS role
+    Value: !GetAtt 'ECSTaskExecutionRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ECSTaskExecutionRole' ] ]
+  ApplicationAutoScalingRole:
+    Description: The ARN of the ECS Autoscaling role
+    Value: !GetAtt 'ApplicationAutoScalingRole.Arn'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ApplicationAutoScalingRole' ] ]
+  SecurityGroup:
+    Description: A security group used to allow Fargate containers to receive traffic
+    Value: !Ref 'SecurityGroup'
+    Export:
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'SecurityGroup' ] ]

@@ -62,7 +62,17 @@ Provides aws codelab challenges ..
 5. Expert challenge: If you change the dynamoDb table name, it should be at one position (`chat-resources.yaml`).
    Currently you have to change it at three positions.
 
-## 4. Useful Links:
+## 4. Fargate Codelab Challenges
+1. Theory Fargate
+2. Create VPC
+3. Deploy resources
+4. Deploy [yocto](https://github.com/felixb/yocto-httpd)
+    * [Hint1](https://docs.aws.amazon.com/de_de/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html)
+    * [Hint2](https://docs.aws.amazon.com/de_de/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html)
+5. Add an ALB
+6. Add Add Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
+
+## 5. Useful Links:
 * AWS Cloudformation Documentation: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
 * AWS IAM Policy Generator: https://awspolicygen.s3.amazonaws.com/policygen.html
 * EC2 Instances pricing overview: http://www.ec2instances.info/?region=eu-central-1

@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  VPCStackName:
+    Type: String
+  ResourcesStackName:
+    Type: String
+  TeamName:
+    Type: String
+  ServiceName:
+    Type: String
+    Default: 'yocto'
+    Description: A name for the service
+  ImageUrl:
+    Type: String
+    Default: 'felixb/yocto-httpd'
+    Description: The url of a docker image that contains the application process that
+      will handle the traffic for this service
+  ContainerPort:
+    Type: Number
+    Default: 8080
+    Description: What port number the application inside the docker container is binding to
+  ContainerCpu:
+    Type: Number
+    Default: 256
+    Description: How much CPU to give the container. 1024 is 1 CPU. Max is 10240.
+  ContainerMemory:
+    Type: Number
+    Default: 1024
+    Description: How much memory in megabytes to give the container
+  DesiredCount:
+    Type: Number
+    Default: 1
+    Description: How many copies of the service task to run
+
+Resources:
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: 'yocto'
+      RetentionInDays: 3
+
+  # The task definition. This is a simple metadata description of what
+  # container to run, and what resource requirements it has.
+  # Counterpart in ec2 is the launch configuration
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref 'ServiceName'
+      Cpu: !Ref 'ContainerCpu'
+      Memory: !Ref 'ContainerMemory'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+      ExecutionRoleArn: !ImportValue {"Fn::Sub": "${ResourcesStackName}:ECSTaskExecutionRole"}
+      ContainerDefinitions:
+      - Name: !Ref 'ServiceName'
+        Cpu: !Ref 'ContainerCpu'
+        Memory: !Ref 'ContainerMemory'
+        Image: !Ref 'ImageUrl'
+        PortMappings:
+        -
+          ContainerPort: !Ref 'ContainerPort'
+          HostPort: !Ref 'ContainerPort'
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: 'eu-central-1'
+            awslogs-stream-prefix: 'yocto'
+
+
+  # The service. The service is a resource which allows you to run multiple
+  # copies of a type of task, and gather up their logs and metrics, as well
+  # as monitor the number of running tasks and replace any that have crashed
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Ref 'ServiceName'
+      Cluster: !ImportValue {"Fn::Sub": "${ResourcesStackName}:ClusterName"}
+      LaunchType: FARGATE
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 75
+      DesiredCount: !Ref 'DesiredCount'
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - !ImportValue {"Fn::Sub": "${ResourcesStackName}:SecurityGroup"}
+          Subnets:
+          - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-1-public-id"}
+          - !ImportValue {"Fn::Sub": "${VPCStackName}-subnet-2-public-id"}
+      TaskDefinition: !Ref 'TaskDefinition'
