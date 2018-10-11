@@ -75,6 +75,8 @@ Provides aws codelab challenges ..
     * [Hint3](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html)
     * Expert: Remove direct access to the service
 6. Add Add Autoscaling with [JMeter](http://jmeter.apache.org/download_jmeter.cgi)
+    * [Hint1](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html)
+    * [Hint2](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalingpolicy.html)
 
 ## 5. Useful Links:
 * AWS Cloudformation Documentation: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
